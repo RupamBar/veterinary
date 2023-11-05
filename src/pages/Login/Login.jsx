@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4, validate } from "uuid";
 import "./Login.css";
 import { ToastContainer, toast } from "react-toastify";
+import supabase from "../../supabase/supabaseConfig";
 
 const useStyles = makeStyles()({
   formControlStyle: {
@@ -40,21 +41,41 @@ function Login() {
   const funcDemo = async (e) => {
     e.preventDefault();
 
-    try {
-      const res = await account.createEmailSession(
-        userData.email,
-        userData.password
-      );
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: userData.email,
+      password: userData.password,
+    })
+
+    if(error)
+    {
+      console.log("Error occured : ", error);
+      toast.error(error.message, {
+        theme: "colored",
+      });
+    }
+    else
+    {
       toast.success("Logged in successfully", {
         theme: "colored",
       });
       navigate("/profile");
-    } catch (err) {
-      console.log("Error :?", err.message);
-      toast.error(err.message, {
-        theme: "colored",
-      });
     }
+
+    // try {
+    //   const res = await account.createEmailSession(
+    //     userData.email,
+    //     userData.password
+    //   );
+    //   toast.success("Logged in successfully", {
+    //     theme: "colored",
+    //   });
+    //   navigate("/profile");
+    // } catch (err) {
+    //   console.log("Error :?", err.message);
+    //   toast.error(err.message, {
+    //     theme: "colored",
+    //   });
+    // }
   };
 
   return (

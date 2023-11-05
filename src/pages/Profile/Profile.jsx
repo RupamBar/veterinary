@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import AuthorizedHeader from '../../components/Header/AuthorizedHeader';
 import AdminDashboard from '../../components/AdminDashboard/AdminDashboard';
 import CustomerProfile from '../../components/CustomerProfile/CustomerProfile';
+import supabase from "../../supabase/supabaseConfig";
 
 const useStyles = makeStyles()({
   logoutBtn : {
@@ -27,22 +28,39 @@ function Profile() {
   const navigate = useNavigate();
   const [user, setUser] = useState('');
   const getUserData = async() => {
-    try
+    // try
+    // {
+    //   const res = await account.get();
+    //   setUser(res);
+    //   console.log(res, "resssss???");
+    // }
+    // catch(err)
+    // {
+    //   console.log("Err", err);
+    // }
+
+    const { data, error } = await supabase.auth.getUser()
+
+    if(error)
     {
-      const res = await account.get();
-      setUser(res);
-      console.log(res, "resssss???");
+      console.log("Error occured : ", error);
+      toast.error(error.message, {
+        theme: "colored",
+      });
     }
-    catch(err)
+    else
     {
-      console.log("Err", err);
+      setUser(data?.user);
+      console.log(data, "data???");
     }
   };
 
   const handleLogout = async() => {
     try
     {
-      const res = await account.deleteSession("current");
+      // const res = await account.deleteSession("current");
+      
+      const { error } = await supabase.auth.signOut()
       toast.success("Logged out successfully", {
         theme: "colored",
       })
@@ -63,7 +81,7 @@ function Profile() {
         <>
           {/* create a separate component for admin and user profile */}
           <AuthorizedHeader user={user} handleLogout={handleLogout}/>
-          {user.email === "admin@gmail.com" ? <AdminDashboard user={user} handleLogout={handleLogout}/> : <CustomerProfile user={user} handleLogout={handleLogout}/>}
+          {user?.email === "rupambar12@gmail.com" ? <AdminDashboard user={user} handleLogout={handleLogout}/> : <CustomerProfile user={user} handleLogout={handleLogout}/>}
         </>
         :
         <>

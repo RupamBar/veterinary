@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4, validate } from "uuid";
 import "./SignUp.css";
 import { ToastContainer, toast } from "react-toastify";
+import supabase from "../../supabase/supabaseConfig";
 
 const useStyles = makeStyles()({
   formControlStyle: {
@@ -41,28 +42,55 @@ function SignUp() {
   const funcDemo = async (e) => {
     e.preventDefault();
 
-    const promise = account.create(
-      uuidv4(),
-      userData.email,
-      userData.password,
-      userData.name
-    );
-
-    promise.then(
-      (res) => {
-        // console.log(res, "res????");
-        toast.success("Signed up successfully", {
-          theme: "colored",
-        });
-        navigate("/login");
-      },
-      (error) => {
-        console.log("Error occured : ", error);
-        toast.error(error.message, {
-          theme: "colored",
-        });
+    
+    const { data, error } = await supabase.auth.signUp({
+      email: userData.email,
+      password: userData.password,
+      options: {
+        data: {
+          name: userData.name,
+        }
       }
-    );
+    })
+
+    if(error)
+    {
+      console.log("Error occured : ", error);
+      toast.error(error.message, {
+        theme: "colored",
+      });
+    }
+    else
+    {
+      toast.success("Signed up successfully", {
+        theme: "colored",
+      });
+      navigate("/login");
+    }
+
+
+    // const promise = account.create(
+    //   uuidv4(),
+    //   userData.email,
+    //   userData.password,
+    //   userData.name
+    // );
+
+    // promise.then(
+    //   (res) => {
+    //     // console.log(res, "res????");
+    //     toast.success("Signed up successfully", {
+    //       theme: "colored",
+    //     });
+    //     navigate("/login");
+    //   },
+    //   (error) => {
+    //     console.log("Error occured : ", error);
+    //     toast.error(error.message, {
+    //       theme: "colored",
+    //     });
+    //   }
+    // );
   };
 
   return (

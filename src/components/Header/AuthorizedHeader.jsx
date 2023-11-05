@@ -38,6 +38,7 @@ const useStyles = makeStyles()((theme) => ({
 function AuthorizedHeader({user, handleLogout}) {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [userData, setUserData] = useState(user);
   const [animalFood, setAnimalFoods] = useState(null);
   const [anchorElAnimals, setAnchorElAnimals] = useState(null);
   const [anchorElMedicines, setAnchorElMedicines] = useState(null);
@@ -271,7 +272,7 @@ function AuthorizedHeader({user, handleLogout}) {
           </Button>
           <Button className={classes.loginBox} onClick={(e) => handleClick(e, 'logout')}>
             <AccountCircleOutlinedIcon />
-            <div style={{margin:'0px 5px'}}>{`  Hi ${user.name}  `}</div>
+            <div style={{margin:'0px 5px'}}>{`  Hi ${userData?.user_metadata?.name}  `}</div>
             {!anchorElLogout ? <ExpandMoreIcon /> : <ExpandLessIcon />}
             {/* <div className={classes.logoutBtn} onClick={handleLogout}>Logout</div> */}
           </Button>
