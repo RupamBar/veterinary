@@ -1,0 +1,84 @@
+.offerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 60px;
+}
+
+.offerWidth {
+    width: 170px;
+}
+
+.offerCards {
+    transition: transform 0.5s;
+}
+
+.offerCards:hover {
+    color: red;
+    transform: scale(1.1);
+}
+
+.offerContainerHeading {
+    margin-top: 100px;
+}
+
+
+
+.petFeatureContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 60px;
+    cursor: pointer;
+}
+.imageWidth {
+    width: 250px;
+}
+
+.petFeatureCards {
+    transition: transform 0.5s;
+}
+
+.petFeatureCards:hover {
+    color: red;
+    transform: scale(1.1);
+}
+
+.petFeatureContainer_Heading {
+    margin-top: 100px;
+}
+
+.petFeatureText {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+}
+
+.brandFeatureHeading {
+    margin-top: 100px;
+}
+
+.brandParentContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.brandPadding {
+    padding: 30px;
+}
+
+.brandFeatureContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 80%;
+    margin-top: 60px;
+}
+
+.brandImages {
+    width: 150px;
+}

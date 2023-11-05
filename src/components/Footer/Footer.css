@@ -1,0 +1,7 @@
+.footerStyle {
+    background-color: rgba(38, 33, 33, 0.566);
+    color: white;
+    padding: 50px;
+    display: flex;
+    justify-content: center;
+}

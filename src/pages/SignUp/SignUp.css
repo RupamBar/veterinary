@@ -1,0 +1,39 @@
+.signUpForm {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: stretch;
+    background-color: #f5f5f5;
+    padding: 100px 0px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+}
+
+.form {
+    width: 25vw;
+    padding: 40px;
+    background-color: white;
+    box-shadow: 1px 1px 10px 5px rgb(156, 150, 150);
+}
+
+.signUpFields {
+    margin-top: 20px;
+}
+
+.signUpFieldsBtn {
+    margin-top: 60px;
+}
+
+.errMsg{
+    font-size: 10px;
+    text-align: left;
+    color: red;
+}
+
+.loginLink {
+    margin-top: 20px;
+    font-size: 10px;
+    color: DodgerBlue;
+    text-decoration: underline;
+    cursor: pointer;
+}
