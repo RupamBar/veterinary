@@ -10,6 +10,9 @@ import "./Header.css";
 import { makeStyles } from 'tss-react/mui';
 import Logo from "./VTSLogo.png"
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import axios from "axios";
+import config from "../../config.json";
 
 const useStyles = makeStyles()((theme) => ({
   // Define your styles here
@@ -35,7 +38,7 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-function AuthorizedHeader({user, handleLogout}) {
+function AuthorizedHeader({user}) {
   const classes = useStyles();
   const navigate = useNavigate();
   const [userData, setUserData] = useState(user);
@@ -46,6 +49,26 @@ function AuthorizedHeader({user, handleLogout}) {
   const [anchorElGrooming, setAnchorElGrooming] = useState(null);
   const [anchorElCheckUp, setAnchorElCheckUp] = useState(null);
   const [anchorElLogout, setAnchorElLogout] = useState(null);
+
+  const handleLogout = async() => {
+    // try
+    // {
+      try
+      {
+        const resp = await axios.get(`${config.backend_URL}/signOutUser`);
+        toast.success("Logged out successfully", {
+          theme: "colored",
+        })
+        navigate("/");
+      }
+      catch(err)
+      {
+        console.log("Error==", err);
+        toast.error(err?.response?.data?.message, {
+          theme: "colored",
+        });
+      }
+  };
 
   const handleClick = (event, str) => {
     if(str === 'animalFoods')

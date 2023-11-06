@@ -1,14 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import "./Profile.css";
 import Button from '@mui/material/Button';
-import { account, ID, databases } from "../../appwrite/appwrite";
+// import { account, ID, databases } from "../../appwrite/appwrite";
 import { makeStyles } from 'tss-react/mui';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import AuthorizedHeader from '../../components/Header/AuthorizedHeader';
 import AdminDashboard from '../../components/AdminDashboard/AdminDashboard';
 import CustomerProfile from '../../components/CustomerProfile/CustomerProfile';
-import supabase from "../../supabase/supabaseConfig";
+// import supabase from "../../supabase/supabaseConfig";
+import axios from "axios";
+import config from "../../config.json";
 
 const useStyles = makeStyles()({
   logoutBtn : {
@@ -28,49 +30,18 @@ function Profile() {
   const navigate = useNavigate();
   const [user, setUser] = useState('');
   const getUserData = async() => {
-    // try
-    // {
-    //   const res = await account.get();
-    //   setUser(res);
-    //   console.log(res, "resssss???");
-    // }
-    // catch(err)
-    // {
-    //   console.log("Err", err);
-    // }
-
-    const { data, error } = await supabase.auth.getUser()
-
-    if(error)
-    {
-      console.log("Error occured : ", error);
-      toast.error(error.message, {
-        theme: "colored",
-      });
-    }
-    else
-    {
-      setUser(data?.user);
-      console.log(data, "data???");
-    }
-  };
-
-  const handleLogout = async() => {
     try
     {
-      // const res = await account.deleteSession("current");
-      
-      const { error } = await supabase.auth.signOut()
-      toast.success("Logged out successfully", {
-        theme: "colored",
-      })
-      navigate("/");
+      const resp = await axios.get(`${config.backend_URL}/getLoggedInUser`);
+      setUser(resp?.data?.data);
     }
     catch(err)
     {
-      console.log("Err", err);
+      console.log("Error==", err);
     }
   };
+
+
 
   useEffect(() => {
     getUserData()
@@ -80,8 +51,8 @@ function Profile() {
         user ? 
         <>
           {/* create a separate component for admin and user profile */}
-          <AuthorizedHeader user={user} handleLogout={handleLogout}/>
-          {user?.email === "rupambar12@gmail.com" ? <AdminDashboard user={user} handleLogout={handleLogout}/> : <CustomerProfile user={user} handleLogout={handleLogout}/>}
+          <AuthorizedHeader user={user}/>
+          {user?.email === "admin@gmail.com" ? <AdminDashboard user={user}/> : <CustomerProfile user={user}/>}
         </>
         :
         <>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { account, ID } from "../../appwrite/appwrite";
+// import { account, ID } from "../../appwrite/appwrite";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import FormControl from "@mui/material/FormControl";
@@ -10,7 +10,9 @@ import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4, validate } from "uuid";
 import "./Login.css";
 import { ToastContainer, toast } from "react-toastify";
-import supabase from "../../supabase/supabaseConfig";
+// import supabase from "../../supabase/supabaseConfig";
+import axios from "axios";
+import config from "../../config.json";
 
 const useStyles = makeStyles()({
   formControlStyle: {
@@ -41,41 +43,25 @@ function Login() {
   const funcDemo = async (e) => {
     e.preventDefault();
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: userData.email,
-      password: userData.password,
-    })
-
-    if(error)
+    try
     {
-      console.log("Error occured : ", error);
-      toast.error(error.message, {
-        theme: "colored",
-      });
-    }
-    else
-    {
+      const payload = {
+        email: userData.email,
+        password: userData.password,
+      };
+      const resp = await axios.post(`${config.backend_URL}/logIn`,payload);
       toast.success("Logged in successfully", {
         theme: "colored",
       });
       navigate("/profile");
     }
-
-    // try {
-    //   const res = await account.createEmailSession(
-    //     userData.email,
-    //     userData.password
-    //   );
-    //   toast.success("Logged in successfully", {
-    //     theme: "colored",
-    //   });
-    //   navigate("/profile");
-    // } catch (err) {
-    //   console.log("Error :?", err.message);
-    //   toast.error(err.message, {
-    //     theme: "colored",
-    //   });
-    // }
+    catch(err)
+    {
+      console.log("Error==", err);
+      toast.error(err?.response?.data?.message, {
+        theme: "colored",
+      });
+    }
   };
 
   return (
