@@ -43,20 +43,29 @@ function Login() {
   const funcDemo = async (e) => {
     e.preventDefault();
 
-    try
-    {
+    try {
+      // // first check if the email is there in customer db or not
+      // const response = await axios.get(`${config.backend_URL}/getCustomerByEmail/${userData.email}`);
+      // // console.log(response.data.data, "response.data");
+      // if(response.data.data.length !== 0)
+      // {
       const payload = {
         email: userData.email,
         password: userData.password,
       };
-      const resp = await axios.post(`${config.backend_URL}/logIn`,payload);
+      const resp = await axios.post(`${config.backend_URL}/logIn`, payload);
       toast.success("Logged in successfully", {
         theme: "colored",
       });
       navigate("/profile");
-    }
-    catch(err)
-    {
+      // }
+      // else{
+      //   // it means the data is there in authentication but not in db so error
+      //   toast.error("No account found, Please contact admin", {
+      //     theme: "colored",
+      //   });
+      // }
+    } catch (err) {
       console.log("Error==", err);
       toast.error(err?.response?.data?.message, {
         theme: "colored",

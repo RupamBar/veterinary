@@ -52,7 +52,7 @@ function Profile() {
         <>
           {/* create a separate component for admin and user profile */}
           <AuthorizedHeader user={user}/>
-          {user?.email === "admin@gmail.com" ? <AdminDashboard user={user}/> : <CustomerProfile user={user}/>}
+          {(user?.user_metadata?.userType).toLowerCase() === ("admin").toLowerCase() ? <AdminDashboard user={user}/> : <CustomerProfile user={user}/>}
         </>
         :
         <>

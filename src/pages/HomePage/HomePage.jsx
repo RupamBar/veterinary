@@ -15,7 +15,7 @@ function HomePage() {
             <img src="https://www.petsy.online/cdn/shop/collections/Pedigree-C_T-collection-page-banner_1373x382.png?v=1698045373" class="d-block w-100" alt="..."/>
           </div>
           <div class="carousel-item">
-            <img src="https://www.petsy.online/cdn/shop/collections/Shebahome-Collection-page-banner_1373x382.png?v=1698047405" class="d-block w-100" alt="..."/>
+            <img src="https://www.petsy.online/cdn/shop/files/Diwali-Banner-All-Produts-2_1900x528.jpg?v=1699256299" class="d-block w-100" alt="..."/>
           </div>
           <div class="carousel-item">
             <img src="https://www.petsy.online/cdn/shop/collections/Truelove-collection-page-banner_1373x382.png?v=1698045418" class="d-block w-100" alt="..."/>

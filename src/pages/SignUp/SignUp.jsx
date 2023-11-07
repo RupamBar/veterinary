@@ -49,13 +49,10 @@ function SignUp() {
       const payload = {
         email: userData.email,
         password: userData.password,
-        options: {
-          data: {
-            name: userData.name,
-          }
-        }
+        name: userData.name
       };
-      const resp = await axios.post(`${config.backend_URL}/signUp`,payload);
+      const resp = await axios.post(`${config.backend_URL}/addCustomer`,payload);
+      const res = await axios.post(`${config.backend_URL}/signUp`,payload);
       toast.success("Signed up successfully", {
         theme: "colored",
       });
@@ -150,8 +147,8 @@ function SignUp() {
                 padding: "5px 20px",
               }}
               onClick={(e) => {
-                if (err) {
-                  toast.error("Please put a valid details", {
+                if (err || !userData.email || !userData.name || !userData.password) {
+                  toast.error("Please put all valid details", {
                     theme: "colored",
                   });
                 } else {
