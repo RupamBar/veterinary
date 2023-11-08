@@ -38,17 +38,41 @@ function AdminDashboard({ user, handleLogout }) {
               >
                 Manage Customers
               </div>
-              <div className="dashCards">Manage Doctors</div>
-              <div className="dashCards">Manage Employees</div>
+              <div className="dashCards" onClick={(e) => {
+                  navigate("/manage-doctors", {
+                    state: JSON.stringify({ user: user}),
+                  });
+                }}>Manage Doctors</div>
+              <div className="dashCards" onClick={(e) => {
+                  navigate("/manage-employees", {
+                    state: JSON.stringify({ user: user}),
+                  });
+                }}>Manage Employees</div>
             </div>
           </div>
           <div className="usersMainContainer">
             <h3>Manage Products</h3>
             <div className="userContainer">
-              <div className="dashCards">Manage Animals</div>
-              <div className="dashCards">Manage Foods</div>
-              <div className="dashCards">Manage Assets</div>
-              <div className="dashCards">Manage Medicines</div>
+              <div className="dashCards" onClick={(e) => {
+                  navigate("/manage-animals", {
+                    state: JSON.stringify({ user: user}),
+                  });
+                }}>Manage Animals</div>
+              <div className="dashCards" onClick={(e) => {
+                  navigate("/manage-foods", {
+                    state: JSON.stringify({ user: user}),
+                  });
+                }}>Manage Foods</div>
+              <div className="dashCards" onClick={(e) => {
+                  navigate("/manage-assets", {
+                    state: JSON.stringify({ user: user}),
+                  });
+                }}>Manage Assets</div>
+              <div className="dashCards" onClick={(e) => {
+                  navigate("/manage-medicines", {
+                    state: JSON.stringify({ user: user}),
+                  });
+                }}>Manage Medicines</div>
             </div>
           </div>
           <div className="usersMainContainer">
@@ -56,7 +80,11 @@ function AdminDashboard({ user, handleLogout }) {
             <div className="userContainer">
               <div className="dashCards">Check ups</div>
               <div className="dashCards">Grooming</div>
-              <div className="dashCards">Prescriptions</div>
+              <div className="dashCards"  onClick={(e) => {
+                  navigate("/manage-prescriptions", {
+                    state: JSON.stringify({ user: user}),
+                  });
+                }}>Prescriptions</div>
               <div className="dashCards">Payments</div>
             </div>
           </div>

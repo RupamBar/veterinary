@@ -100,7 +100,7 @@ function AuthorizedHeader({user}) {
   return (
     <div>
       <div className="navbar">
-        <div className="logoDiv" onClick={(e) => {navigate("/")}}>
+        <div className="logoDiv" onClick={(e) => {navigate("/profile")}}>
           <img
             src={Logo}
             alt="Logo"

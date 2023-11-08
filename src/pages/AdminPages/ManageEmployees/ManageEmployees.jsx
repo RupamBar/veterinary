@@ -1,65 +1,45 @@
 import React, { useState, useEffect } from "react";
 import AuthorizedHeader from "../../../components/Header/AuthorizedHeader";
 import { useLocation } from "react-router-dom";
-// import { account, ID, databases } from "../../../appwrite/appwrite";
-import { ToastContainer, toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import "./ManageCustomers.css";
-import { Button } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import config from "../../../config.json";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
+import config from "../../../config.json";
+import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import "./ManageEmployees.css";
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  // "& .MuiDialogContent-root": {
-  //   padding: theme.spacing(2),
-  // },
-  // "& .MuiDialogActions-root": {
-  //   padding: theme.spacing(1),
-  // },
-}));
-
-function ManageCustomers() {
+function ManageEmployees() {
   const location = useLocation();
   const navigate = useNavigate();
   const stateData = JSON.parse(location.state);
   const regex =
     /^(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).*(?=.*[A-Z]).*(?=.*[a-z]).*(?=.*[0-9]).{8}$/;
   const [open, setOpen] = useState(false);
-  const [customerList, setCustomerList] = useState([]);
+  const [doctorList, setDoctorList] = useState([]);
   const [err, setErr] = useState(false);
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
-    password: "",
+    // password: "",
+    phone: null,
+    address: "",
+    city: "",
+    state: "",
+    pincode: null,
+    department: "",
+    gender: "",
   });
   const [flagToCallUpdateAPI, setFlagToCallUpdateAPI] = useState(false);
-
-  const getAllCustomers = async () => {
-    try {
-      const res = await axios.get(`${config.backend_URL}/getAllCustomers`);
-      // console.log(res.data.data, "res.data.data");
-      setCustomerList(res?.data?.data);
-    } catch (err) {
-      console.log("Error ==", err);
-    }
-  };
-
-  useEffect(() => {
-    getAllCustomers();
-  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -71,14 +51,40 @@ function ManageCustomers() {
     setNewUser({
       name: "",
       email: "",
-      password: "",
+      // password: "",
+      phone: null,
+      address: "",
+      city: "",
+      state: "",
+      pincode: null,
+      department: "",
+      gender: "",
     });
   };
 
-  const startEditUser = async(data) => {
+  const getAllEmployees = async () => {
+    try {
+      const res = await axios.get(`${config.backend_URL}/getAllEmployees`);
+      setDoctorList(res?.data?.data);
+    } catch (err) {
+      console.log("Error==", err.message);
+      toast.error(err?.response?.data?.message, {
+        theme: "colored",
+      });
+    }
+  };
+
+  useEffect(() => {
+    getAllEmployees();
+  }, []);
+
+  // ***for updating user
+  const startEditEmployee = async (data) => {
     try {
       // console.log(data.id, "dATA");
-      const res = await axios.get(`${config.backend_URL}/getCustomerById/${data.id}`);
+      const res = await axios.get(
+        `${config.backend_URL}/getEmployeeById/${data.id}`
+      );
       // console.log(res.data.data, "res.data.data");
       setNewUser(res?.data?.data[0]);
       setFlagToCallUpdateAPI(true);
@@ -86,26 +92,20 @@ function ManageCustomers() {
     } catch (err) {
       console.log("Error ==", err);
     }
-  }
+  };
 
-  const updateUsers = async () => {
-    // console.log(newUser, "newUser");
-    try
-    {
-      const payload = {
-        id : newUser.id,
-        email: newUser.email,
-        password: newUser.password,
-        name: newUser.name
-      };
-      const resp = await axios.put(`${config.backend_URL}/updateCustomer`,payload);
-      toast.success("User is updated successfully", {
+  // ***update employee
+  const updateEmployee = async () => {
+    try {
+      const resp = await axios.put(
+        `${config.backend_URL}/updateEmployee`,
+        newUser
+      );
+      toast.success("Employee's account is updated successfully", {
         theme: "colored",
       });
-      getAllCustomers();
-    }
-    catch(err)
-    {
+      getAllEmployees();
+    } catch (err) {
       console.log("Error==", err);
       toast.error(err?.response?.data?.message, {
         theme: "colored",
@@ -114,50 +114,55 @@ function ManageCustomers() {
     handleClose();
   };
 
-  const createUsers = async () => {
-    // console.log(newUser, "newUser");
-    try
-    {
-      const payload = {
-        email: newUser.email,
-        password: newUser.password,
-        name: newUser.name
-      };
-      const resp = await axios.post(`${config.backend_URL}/signUp`,payload);
-      const response = await axios.post(`${config.backend_URL}/addCustomer`,payload);
-      toast.success("User is created successfully", {
-        theme: "colored",
-      });
-      getAllCustomers();
-    }
-    catch(err)
-    {
-      console.log("Error==", err);
-      toast.error(err?.response?.data?.message, {
-        theme: "colored",
-      });
-    }
-    handleClose();
-  };
-
-  const startDeleteUser = async(data) => {
-    const ans = window.prompt(`Do you want to delete the customer ${data.email} ? If yes then put 'YES' here and click OK`)
-    // console.log(ans, "ans");
-    // console.log(stateData.user, "stateData.user");
-    try
-    {
-      if(ans === "YES")
-      {
-        const res = await axios.delete(`${config.backend_URL}/deleteCustomer/${data.id}`);
-        // const response = await axios.delete(`${config.backend_URL}/removeAuthCustomer/${stateData.user.id}`);
-        getAllCustomers();
-        toast.success("User is deleted successfully", {
+  // ***for creating user
+  const createEmployee = async () => {
+    try {
+      const res = await axios.get(
+        `${config.backend_URL}/getEmployeeByEmail/${newUser.email}`
+      );
+      if (res.data.data.length === 0) {
+        const resp = await axios.post(
+          `${config.backend_URL}/addEmployee`,
+          newUser
+        );
+        toast.success("Employee's account is created successfully", {
+          theme: "colored",
+        });
+        handleClose();
+        getAllEmployees();
+      } else {
+        toast.error("Employee's account already exists", {
           theme: "colored",
         });
       }
+      console.log(res.data.data, "res.data.data");
+    } catch (err) {
+      console.log("Error==", err.message);
+      toast.error(err?.response?.data?.message, {
+        theme: "colored",
+      });
     }
-    catch(err)
-    {
+  };
+
+  // ***for deleting employee
+  const startDeleteEmployee = async (data) => {
+    const ans = window.prompt(
+      `Do you want to delete the employee ${data.email} ? If yes then put 'YES' here and click OK`
+    );
+    // console.log(ans, "ans");
+    // console.log(stateData.user, "stateData.user");
+    try {
+      if (ans === "YES") {
+        const res = await axios.delete(
+          `${config.backend_URL}/deleteEmployee/${data.id}`
+        );
+        // const response = await axios.delete(`${config.backend_URL}/removeAuthCustomer/${stateData.user.id}`);
+        getAllEmployees();
+        toast.success("Employee's account is deleted successfully", {
+          theme: "colored",
+        });
+      }
+    } catch (err) {
       console.log("Error==", err.message);
     }
   };
@@ -183,7 +188,7 @@ function ManageCustomers() {
               }}
               onClick={(e) => {
                 // console.log(params.row, "row");
-                startEditUser(params.row);
+                startEditEmployee(params.row);
               }}
             >
               Update
@@ -195,7 +200,7 @@ function ManageCustomers() {
                 marginRight: "5px",
               }}
               onClick={(e) => {
-                startDeleteUser(params.row);
+                startDeleteEmployee(params.row);
               }}
             >
               Delete
@@ -216,9 +221,14 @@ function ManageCustomers() {
       width: 200,
     },
     {
-      field: "password",
-      headerName: "Password",
-      width: 200,
+      field: "gender",
+      headerName: "Gender",
+      width: 100,
+    },
+    {
+      field: "department",
+      headerName: "Department",
+      width: 150,
     },
     {
       field: "phone",
@@ -247,7 +257,6 @@ function ManageCustomers() {
     },
   ];
 
-  // console.log(JSON.parse(location.state), "location.state.user");
   return (
     <div>
       <AuthorizedHeader user={stateData.user} />
@@ -256,7 +265,7 @@ function ManageCustomers() {
             <div>
                 <ArrowBackIcon style={{cursor: 'pointer'}} onClick={(e) => {navigate('/profile')}}/>
             </div>
-            <div className="adminPageHeading">Manage Customers</div>
+            <div className="adminPageHeading">Manage Employess</div>
         </div>
         <div className="addBtnContainer">
           <Button
@@ -267,13 +276,13 @@ function ManageCustomers() {
             }}
             onClick={handleClickOpen}
           >
-            Add User
+            Add Employee
           </Button>
         </div>
         <div className="tableContainer">
           <Box sx={{ height: 450, width: "100%" }}>
             <DataGrid
-              rows={customerList}
+              rows={doctorList}
               columns={columns}
               initialState={{
                 pagination: {
@@ -291,7 +300,7 @@ function ManageCustomers() {
         </div>
       </div>
 
-      <BootstrapDialog
+      <Dialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -299,7 +308,7 @@ function ManageCustomers() {
         maxWidth="sm"
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Add User
+          Add Employees
         </DialogTitle>
         <IconButton
           aria-label="close"
@@ -314,13 +323,28 @@ function ManageCustomers() {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <div>
+          <div style={{ color: "red", marginBottom: "10px" }}>
+            '*' fields are mandatory
+          </div>
+          <div className="textFieldStyle">
             <TextField
               id="outlined-basic"
-              label="Email"
+              label="Name*"
               variant="outlined"
               style={{ width: "100%" }}
-              value={newUser.email || ''}
+              value={newUser.name || ""}
+              onChange={(e) => {
+                setNewUser({ ...newUser, name: e.target.value });
+              }}
+            />
+          </div>
+          <div className="textFieldStyle">
+            <TextField
+              id="outlined-basic"
+              label="Email*"
+              variant="outlined"
+              style={{ width: "100%" }}
+              value={newUser.email || ""}
               onChange={(e) => {
                 setNewUser({ ...newUser, email: e.target.value });
               }}
@@ -329,33 +353,86 @@ function ManageCustomers() {
           <div className="textFieldStyle">
             <TextField
               id="outlined-basic"
-              label="Password"
+              label="Gender*"
               variant="outlined"
-              type="password"
               style={{ width: "100%" }}
-              value={newUser.password || ''}
+              value={newUser.gender || ""}
               onChange={(e) => {
-                if (!regex.test(e.target.value)) {
-                  setErr(
-                    "Please put atleast 8 characters with special, uppercase, lowercase characters and number"
-                  );
-                } else {
-                  setErr(false);
-                }
-                setNewUser({ ...newUser, password: e.target.value });
+                setNewUser({ ...newUser, gender: e.target.value });
               }}
             />
-            {err ? <div className="errMsg">{err}</div> : null}
           </div>
           <div className="textFieldStyle">
             <TextField
               id="outlined-basic"
-              label="Name"
+              label="Department*"
               variant="outlined"
               style={{ width: "100%" }}
-              value={newUser.name || ''}
+              value={newUser.department || ""}
               onChange={(e) => {
-                setNewUser({ ...newUser, name: e.target.value });
+                setNewUser({ ...newUser, department: e.target.value });
+              }}
+            />
+          </div>
+          <div className="textFieldStyle">
+            <TextField
+              id="outlined-basic"
+              label="Phone Number"
+              variant="outlined"
+              style={{ width: "100%" }}
+              value={newUser.phone || ""}
+              type="number"
+              onChange={(e) => {
+                setNewUser({ ...newUser, phone: e.target.value || null });
+              }}
+            />
+          </div>
+          <div className="textFieldStyle">
+            <TextField
+              id="outlined-basic"
+              label="Address"
+              variant="outlined"
+              style={{ width: "100%" }}
+              value={newUser.address || ""}
+              onChange={(e) => {
+                setNewUser({ ...newUser, address: e.target.value });
+              }}
+            />
+          </div>
+          <div className="textFieldStyle">
+            <TextField
+              id="outlined-basic"
+              label="City"
+              variant="outlined"
+              style={{ width: "100%" }}
+              value={newUser.city || ""}
+              onChange={(e) => {
+                setNewUser({ ...newUser, city: e.target.value });
+              }}
+            />
+          </div>
+          <div className="textFieldStyle">
+            <TextField
+              id="outlined-basic"
+              label="State"
+              variant="outlined"
+              style={{ width: "100%" }}
+              value={newUser.state || ""}
+              onChange={(e) => {
+                setNewUser({ ...newUser, state: e.target.value });
+              }}
+            />
+          </div>
+          <div className="textFieldStyle">
+            <TextField
+              id="outlined-basic"
+              label="Pincode"
+              variant="outlined"
+              style={{ width: "100%" }}
+              type="number"
+              value={newUser.pincode || ""}
+              onChange={(e) => {
+                setNewUser({ ...newUser, pincode: e.target.value || null });
               }}
             />
           </div>
@@ -364,12 +441,18 @@ function ManageCustomers() {
           <Button
             autoFocus
             onClick={(e) => {
-              if (err || !newUser.email || !newUser.name || !newUser.password) {
+              if (
+                err ||
+                !newUser.email ||
+                !newUser.name ||
+                !newUser.department ||
+                !newUser.gender
+              ) {
                 toast.error("Please put all valid details", {
                   theme: "colored",
                 });
               } else {
-                flagToCallUpdateAPI ? updateUsers() : createUsers();
+                flagToCallUpdateAPI ? updateEmployee() : createEmployee();
               }
             }}
             style={{
@@ -381,9 +464,9 @@ function ManageCustomers() {
             Submit
           </Button>
         </DialogActions>
-      </BootstrapDialog>
+      </Dialog>
     </div>
   );
 }
 
-export default ManageCustomers;
+export default ManageEmployees;

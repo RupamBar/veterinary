@@ -1,65 +1,56 @@
 import React, { useState, useEffect } from "react";
 import AuthorizedHeader from "../../../components/Header/AuthorizedHeader";
 import { useLocation } from "react-router-dom";
-// import { account, ID, databases } from "../../../appwrite/appwrite";
-import { ToastContainer, toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import "./ManageCustomers.css";
-import { Button } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import config from "../../../config.json";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Autocomplete from '@mui/material/Autocomplete';
+import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
+import config from "../../../config.json";
+import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+// import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import "./ManageMedicines.css";
+import defaultImage from "../../../resources/defaultView.png"
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  // "& .MuiDialogContent-root": {
-  //   padding: theme.spacing(2),
-  // },
-  // "& .MuiDialogActions-root": {
-  //   padding: theme.spacing(1),
-  // },
-}));
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
 
-function ManageCustomers() {
+function ManageMedicines() {
   const location = useLocation();
   const navigate = useNavigate();
   const stateData = JSON.parse(location.state);
   const regex =
     /^(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).*(?=.*[A-Z]).*(?=.*[a-z]).*(?=.*[0-9]).{8}$/;
   const [open, setOpen] = useState(false);
-  const [customerList, setCustomerList] = useState([]);
+  const [doctorList, setDoctorList] = useState([]);
   const [err, setErr] = useState(false);
   const [newUser, setNewUser] = useState({
-    name: "",
-    email: "",
-    password: "",
+    name: null,
+    count: null,
+    picURL: null,
+    price : null,
   });
   const [flagToCallUpdateAPI, setFlagToCallUpdateAPI] = useState(false);
-
-  const getAllCustomers = async () => {
-    try {
-      const res = await axios.get(`${config.backend_URL}/getAllCustomers`);
-      // console.log(res.data.data, "res.data.data");
-      setCustomerList(res?.data?.data);
-    } catch (err) {
-      console.log("Error ==", err);
-    }
-  };
-
-  useEffect(() => {
-    getAllCustomers();
-  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -69,16 +60,36 @@ function ManageCustomers() {
     setErr(false);
     setFlagToCallUpdateAPI(false);
     setNewUser({
-      name: "",
-      email: "",
-      password: "",
+      name: null,
+      count: null,
+      picURL: null,
+      price : null,
     });
   };
 
-  const startEditUser = async(data) => {
+  const getAllMedicines = async () => {
+    try {
+      const res = await axios.get(`${config.backend_URL}/getAllMedicines`);
+      setDoctorList(res?.data?.data);
+    } catch (err) {
+      console.log("Error==", err.message);
+      toast.error(err?.response?.data?.message, {
+        theme: "colored",
+      });
+    }
+  };
+
+  useEffect(() => {
+    getAllMedicines();
+  }, []);
+
+  // ***for updating user
+  const startEditMedicine = async (data) => {
     try {
       // console.log(data.id, "dATA");
-      const res = await axios.get(`${config.backend_URL}/getCustomerById/${data.id}`);
+      const res = await axios.get(
+        `${config.backend_URL}/getMedicineById/${data.id}`
+      );
       // console.log(res.data.data, "res.data.data");
       setNewUser(res?.data?.data[0]);
       setFlagToCallUpdateAPI(true);
@@ -86,26 +97,20 @@ function ManageCustomers() {
     } catch (err) {
       console.log("Error ==", err);
     }
-  }
+  };
 
-  const updateUsers = async () => {
-    // console.log(newUser, "newUser");
-    try
-    {
-      const payload = {
-        id : newUser.id,
-        email: newUser.email,
-        password: newUser.password,
-        name: newUser.name
-      };
-      const resp = await axios.put(`${config.backend_URL}/updateCustomer`,payload);
-      toast.success("User is updated successfully", {
+  // ***update employee
+  const updateMedicine = async () => {
+    try {
+      const resp = await axios.put(
+        `${config.backend_URL}/updateMedicine`,
+        newUser
+      );
+      toast.success("Food is added successfully", {
         theme: "colored",
       });
-      getAllCustomers();
-    }
-    catch(err)
-    {
+      getAllMedicines();
+    } catch (err) {
       console.log("Error==", err);
       toast.error(err?.response?.data?.message, {
         theme: "colored",
@@ -114,50 +119,56 @@ function ManageCustomers() {
     handleClose();
   };
 
-  const createUsers = async () => {
-    // console.log(newUser, "newUser");
-    try
-    {
-      const payload = {
-        email: newUser.email,
-        password: newUser.password,
-        name: newUser.name
-      };
-      const resp = await axios.post(`${config.backend_URL}/signUp`,payload);
-      const response = await axios.post(`${config.backend_URL}/addCustomer`,payload);
-      toast.success("User is created successfully", {
-        theme: "colored",
-      });
-      getAllCustomers();
-    }
-    catch(err)
-    {
-      console.log("Error==", err);
-      toast.error(err?.response?.data?.message, {
-        theme: "colored",
-      });
-    }
-    handleClose();
-  };
-
-  const startDeleteUser = async(data) => {
-    const ans = window.prompt(`Do you want to delete the customer ${data.email} ? If yes then put 'YES' here and click OK`)
-    // console.log(ans, "ans");
-    // console.log(stateData.user, "stateData.user");
-    try
-    {
-      if(ans === "YES")
-      {
-        const res = await axios.delete(`${config.backend_URL}/deleteCustomer/${data.id}`);
-        // const response = await axios.delete(`${config.backend_URL}/removeAuthCustomer/${stateData.user.id}`);
-        getAllCustomers();
-        toast.success("User is deleted successfully", {
+  // ***for creating user
+  const createMedicine = async () => {
+    try {
+        // console.log(newUser, "newUser");
+      const res = await axios.get(
+        `${config.backend_URL}/getMedicineByName/${newUser.name}`
+      );
+      if (res.data.data.length === 0) {
+        const resp = await axios.post(
+          `${config.backend_URL}/addMedicine`,
+          newUser
+        );
+        toast.success("Medicine is added successfully", {
+          theme: "colored",
+        });
+        handleClose();
+        getAllMedicines();
+      } else {
+        toast.error("This Medicine already exists", {
           theme: "colored",
         });
       }
+      // console.log(res.data.data, "res.data.data");
+    } catch (err) {
+      console.log("Error==", err.message);
+      toast.error(err?.response?.data?.message, {
+        theme: "colored",
+      });
     }
-    catch(err)
-    {
+  };
+
+  // ***for deleting employee
+  const startDeleteMedicine = async (data) => {
+    const ans = window.prompt(
+      `Do you want to delete the medicine ${data.name} ? If yes then put 'YES' here and click OK`
+    );
+    // console.log(ans, "ans");
+    // console.log(stateData.user, "stateData.user");
+    try {
+      if (ans === "YES") {
+        const res = await axios.delete(
+          `${config.backend_URL}/deleteMedicine/${data.id}`
+        );
+        // const response = await axios.delete(`${config.backend_URL}/removeAuthCustomer/${stateData.user.id}`);
+        getAllMedicines();
+        toast.success("Medicine is deleted successfully", {
+          theme: "colored",
+        });
+      }
+    } catch (err) {
       console.log("Error==", err.message);
     }
   };
@@ -183,7 +194,7 @@ function ManageCustomers() {
               }}
               onClick={(e) => {
                 // console.log(params.row, "row");
-                startEditUser(params.row);
+                startEditMedicine(params.row);
               }}
             >
               Update
@@ -195,7 +206,7 @@ function ManageCustomers() {
                 marginRight: "5px",
               }}
               onClick={(e) => {
-                startDeleteUser(params.row);
+                startDeleteMedicine(params.row);
               }}
             >
               Delete
@@ -211,52 +222,42 @@ function ManageCustomers() {
       width: 150,
     },
     {
-      field: "email",
-      headerName: "Email",
-      width: 200,
-    },
-    {
-      field: "password",
-      headerName: "Password",
-      width: 200,
-    },
-    {
-      field: "phone",
-      headerName: "Phone",
+      field: "count",
+      headerName: "Count",
       width: 150,
     },
     {
-      field: "address",
-      headerName: "Address",
-      width: 200,
-    },
-    {
-      field: "city",
-      headerName: "City",
-      width: 100,
-    },
-    {
-      field: "state",
-      headerName: "State",
+      field: "price",
+      headerName: "Price in Rupees",
       width: 150,
     },
     {
-      field: "pincode",
-      headerName: "Pincode",
-      width: 100,
+    //   field: "picURL",
+      headerName: "Picture",
+      width: 250,
+      renderCell: (params) => {
+        // console.log(params, "params");
+        return (
+            <img src={params.row.picURL} width='150px'/>
+        )
+    }
     },
   ];
 
-  // console.log(JSON.parse(location.state), "location.state.user");
   return (
     <div>
       <AuthorizedHeader user={stateData.user} />
       <div className="adminPageBg">
-      <div style={{display : 'flex', alignItems: 'center'}}>
-            <div>
-                <ArrowBackIcon style={{cursor: 'pointer'}} onClick={(e) => {navigate('/profile')}}/>
-            </div>
-            <div className="adminPageHeading">Manage Customers</div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div>
+            <ArrowBackIcon
+              style={{ cursor: "pointer" }}
+              onClick={(e) => {
+                navigate("/profile");
+              }}
+            />
+          </div>
+          <div className="adminPageHeading">Manage Medicines</div>
         </div>
         <div className="addBtnContainer">
           <Button
@@ -267,13 +268,13 @@ function ManageCustomers() {
             }}
             onClick={handleClickOpen}
           >
-            Add User
+            Add Medicine
           </Button>
         </div>
         <div className="tableContainer">
           <Box sx={{ height: 450, width: "100%" }}>
             <DataGrid
-              rows={customerList}
+              rows={doctorList}
               columns={columns}
               initialState={{
                 pagination: {
@@ -291,7 +292,7 @@ function ManageCustomers() {
         </div>
       </div>
 
-      <BootstrapDialog
+      <Dialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -299,7 +300,7 @@ function ManageCustomers() {
         maxWidth="sm"
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Add User
+          {flagToCallUpdateAPI ? "Update Medicine" : "Add Medicine"}
         </DialogTitle>
         <IconButton
           aria-label="close"
@@ -314,62 +315,90 @@ function ManageCustomers() {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <div>
+          <div style={{ color: "red", marginBottom: "10px" }}>
+            '*' fields are mandatory
+          </div>
+          <div className="textFieldStyle">
             <TextField
               id="outlined-basic"
-              label="Email"
+              label="Name*"
               variant="outlined"
               style={{ width: "100%" }}
-              value={newUser.email || ''}
+              value={newUser.name || ""}
               onChange={(e) => {
-                setNewUser({ ...newUser, email: e.target.value });
+                setNewUser({ ...newUser, name: e.target.value || null });
               }}
             />
           </div>
           <div className="textFieldStyle">
             <TextField
               id="outlined-basic"
-              label="Password"
+              label="Count*"
               variant="outlined"
-              type="password"
               style={{ width: "100%" }}
-              value={newUser.password || ''}
+              value={newUser.count || ""}
+              type="number"
               onChange={(e) => {
-                if (!regex.test(e.target.value)) {
-                  setErr(
-                    "Please put atleast 8 characters with special, uppercase, lowercase characters and number"
-                  );
-                } else {
-                  setErr(false);
-                }
-                setNewUser({ ...newUser, password: e.target.value });
+                setNewUser({ ...newUser, count: e.target.value || null });
               }}
             />
-            {err ? <div className="errMsg">{err}</div> : null}
           </div>
           <div className="textFieldStyle">
             <TextField
               id="outlined-basic"
-              label="Name"
+              label="Price* (in Rupees)"
               variant="outlined"
               style={{ width: "100%" }}
-              value={newUser.name || ''}
+              value={newUser.price || ""}
+              type="number"
               onChange={(e) => {
-                setNewUser({ ...newUser, name: e.target.value });
+                setNewUser({ ...newUser, price: e.target.value || null });
               }}
             />
+          </div>
+          <div className="textFieldStyle">
+            <TextField
+              id="outlined-basic"
+              label="Picture URL*"
+              variant="outlined"
+              style={{ width: "100%" }}
+              value={newUser.picURL || ""}
+              onChange={(e) => {
+                setNewUser({ ...newUser, picURL: e.target.value || null});
+              }}
+            />
+            <div className="textFieldStyle">
+                <img src={newUser.picURL || defaultImage} alt="preview image" width='100px'/>
+            </div>
+            <div className="textFieldStyle">OR</div>
+            <div className="textFieldStyle">
+              <Button
+                component="label"
+                variant="contained"
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload Picture*
+                <VisuallyHiddenInput type="file" accept="image/*" />
+              </Button>
+            </div>
           </div>
         </DialogContent>
         <DialogActions>
           <Button
             autoFocus
             onClick={(e) => {
-              if (err || !newUser.email || !newUser.name || !newUser.password) {
+              if (
+                err ||
+                !newUser.name ||
+                !newUser.count ||
+                !newUser.picURL ||
+                !newUser.price
+              ) {
                 toast.error("Please put all valid details", {
                   theme: "colored",
                 });
               } else {
-                flagToCallUpdateAPI ? updateUsers() : createUsers();
+                flagToCallUpdateAPI ? updateMedicine() : createMedicine();
               }
             }}
             style={{
@@ -381,9 +410,9 @@ function ManageCustomers() {
             Submit
           </Button>
         </DialogActions>
-      </BootstrapDialog>
+      </Dialog>
     </div>
   );
 }
 
-export default ManageCustomers;
+export default ManageMedicines;
