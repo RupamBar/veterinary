@@ -106,7 +106,7 @@ function ManageMedicines() {
         `${config.backend_URL}/updateMedicine`,
         newUser
       );
-      toast.success("Food is added successfully", {
+      toast.success("Medicine is updated successfully", {
         theme: "colored",
       });
       getAllMedicines();

@@ -108,7 +108,7 @@ function ManagePrescriptions() {
         `${config.backend_URL}/updateMedicine`,
         newUser
       );
-      toast.success("Food is added successfully", {
+      toast.success("Prescription is updated successfully", {
         theme: "colored",
       });
       getAllPrescriptions();
@@ -133,13 +133,13 @@ function ManagePrescriptions() {
           `${config.backend_URL}/addMedicine`,
           newUser
         );
-        toast.success("Medicine is added successfully", {
+        toast.success("Prescription is added successfully", {
           theme: "colored",
         });
         handleClose();
         getAllPrescriptions();
       } else {
-        toast.error("This Medicine already exists", {
+        toast.error("This Prescription already exists", {
           theme: "colored",
         });
       }

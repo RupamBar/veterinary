@@ -106,7 +106,7 @@ function ManageFoods() {
         `${config.backend_URL}/updateFood`,
         newUser
       );
-      toast.success("Food is added successfully", {
+      toast.success("Food is updated successfully", {
         theme: "colored",
       });
       getAllFoods();

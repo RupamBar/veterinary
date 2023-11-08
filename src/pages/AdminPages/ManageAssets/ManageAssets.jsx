@@ -106,7 +106,7 @@ function ManageAssets() {
         `${config.backend_URL}/updateAsset`,
         newUser
       );
-      toast.success("Food is added successfully", {
+      toast.success("Asset is updated successfully", {
         theme: "colored",
       });
       getAllAssets();

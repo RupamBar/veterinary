@@ -112,7 +112,7 @@ function ManageAnimals() {
         `${config.backend_URL}/updateAnimal`,
         newUser
       );
-      toast.success("Animal is added successfully", {
+      toast.success("Animal is updated successfully", {
         theme: "colored",
       });
       getAllAnimals();
