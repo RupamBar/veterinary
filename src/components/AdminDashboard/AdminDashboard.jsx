@@ -17,7 +17,7 @@ const useStyles = makeStyles()({
   },
 });
 
-function AdminDashboard({ user, handleLogout }) {
+function AdminDashboard({ user }) {
   const classes = useStyles();
   const navigate = useNavigate();
   return (

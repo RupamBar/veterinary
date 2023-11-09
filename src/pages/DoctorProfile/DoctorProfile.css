@@ -1,0 +1,44 @@
+.doctorDashboardHeading {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+}
+
+.dashBoardContainer{
+    display: flex;
+    flex-direction: row;
+    /* padding: 20px 40px; */
+}
+
+.optionsDiv {
+    width: 15%;
+    padding-left: 50px;
+    padding-top: 20px;
+    background-color: black;
+    color: white;
+    text-align: left;
+    height: 80vh;
+    border-radius: 0px 0px 0px 50px;
+}
+
+.options {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.activeTab {
+    background-color: white;
+    color: black;
+    border-radius: 0px 0px 0px 10px;
+}
+
+.pagesDiv {
+    width: 85%;
+    /* border-top: 1px solid black; */
+    height: 80vh;
+    margin-top: 20px;
+}
+

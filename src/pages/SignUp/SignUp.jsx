@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import { account, ID } from "../../appwrite/appwrite";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
@@ -40,6 +40,32 @@ function SignUp() {
     password: "",
   });
   const [err, setErr] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState('');
+
+  // getting token
+  const getLoggedInUserData = async() => {
+    try
+    {
+      const tokenData = JSON.parse(localStorage.getItem('token'));
+      // console.log(JSON.parse(localStorage.getItem('token')), "user");
+      if(tokenData.userType === 'doctor')
+      {
+        navigate('/doctorProfile');
+      }
+      else
+      {
+        navigate('/profile');
+      }
+      setLoggedInUser(tokenData || '');
+    }
+    catch(err)
+    {
+      console.log("Error==", err);
+    }
+  };
+  useEffect(() => {
+    getLoggedInUserData()
+  }, []);
 
   const funcDemo = async (e) => {
     e.preventDefault();

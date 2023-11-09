@@ -1,3 +1,4 @@
+import React, {useState, useEffect} from 'react';
 import logo from "./logo.svg";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -13,11 +14,35 @@ import ManageFoods from "./pages/AdminPages/ManageFoods/ManageFoods";
 import ManageAssets from "./pages/AdminPages/ManageAssets/ManageAssets";
 import ManageMedicines from "./pages/AdminPages/ManageMedicines/ManageMedicines";
 
+import SignUpAsDoctor from "./pages/SignUpAsDoctor/SignUpAsDoctor";
+import LoginAsDoctor from "./pages/LoginAsDoctor/LoginAsDoctor";
+import DoctorProfile from "./pages/DoctorProfile/DoctorProfile";
+
 import ManagePrescriptions from "./pages/AdminPages/ManagePrescriptions/ManagePrescriptions";
 import { ToastContainer, toast } from 'react-toastify';
 import "../node_modules/react-toastify/dist/ReactToastify.css"
+import { useNavigate } from 'react-router-dom';
 
 function App() {
+  // const navigate = useNavigate();
+  const [loggedInUser, setLoggedInUser] = useState('');
+  const getLoggedInUserData = async() => {
+    try
+    {
+      // const resp = await axios.get(`${config.backend_URL}/getLoggedInUser`);
+      const tokenData = JSON.parse(localStorage.getItem('token'));
+      console.log(JSON.parse(localStorage.getItem('token')), "user");
+      setLoggedInUser(tokenData || '');
+    }
+    catch(err)
+    {
+      console.log("Error==", err);
+    }
+  };
+
+  useEffect(() => {
+    getLoggedInUserData()
+  }, []);
   return (
     <div className="App">
       <BrowserRouter>
@@ -29,11 +54,15 @@ function App() {
           <Route path="manage-customers" element={<ManageCustomers />} />
           <Route path="manage-doctors" element={<ManageDoctors />} />
           <Route path="manage-employees" element={<ManageEmployees />} />
-          <Route path="manage-animals" element={< ManageAnimals/>} />
-          <Route path="manage-foods" element={< ManageFoods/>} />
-          <Route path="manage-assets" element={< ManageAssets/>} />
-          <Route path="manage-medicines" element={< ManageMedicines/>} />
-          <Route path="manage-prescriptions" element={< ManagePrescriptions/>} />
+          <Route path="manage-animals" element={< ManageAnimals />} />
+          <Route path="manage-foods" element={< ManageFoods />} />
+          <Route path="manage-assets" element={< ManageAssets />} />
+          <Route path="manage-medicines" element={< ManageMedicines />} />
+          <Route path="manage-prescriptions" element={< ManagePrescriptions />} />
+
+          <Route path="sign-up-as-doctor" element={<SignUpAsDoctor  />} />
+          <Route path="login-as-doctor" element={<LoginAsDoctor  />} />
+          <Route path="doctorProfile" element={<DoctorProfile  />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer/>

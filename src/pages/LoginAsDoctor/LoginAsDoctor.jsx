@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import { makeStyles } from "tss-react/mui";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4, validate } from "uuid";
-import "./Login.css";
+import "./LoginAsDoctor.css";
 import { ToastContainer, toast } from "react-toastify";
 // import supabase from "../../supabase/supabaseConfig";
 import axios from "axios";
@@ -29,7 +29,7 @@ const useStyles = makeStyles()({
   },
 });
 
-function Login() {
+function LoginAsDoctor() {
   const classes = useStyles();
   const navigate = useNavigate();
   const regex =
@@ -41,23 +41,29 @@ function Login() {
   const [err, setErr] = useState(false);
 
   // getting Token
-  const [loggedInUser, setLoggedInUser] = useState("");
-  const getLoggedInUserData = async () => {
-    try {
-      const tokenData = JSON.parse(localStorage.getItem("token"));
+  const [loggedInUser, setLoggedInUser] = useState('');
+  const getLoggedInUserData = async() => {
+    try
+    {
+      const tokenData = JSON.parse(localStorage.getItem('token'));
       // console.log(JSON.parse(localStorage.getItem('token')), "user");
-      if (tokenData.userType === "customer") {
-        navigate("/doctorProfile");
-      } else {
-        navigate("/profile");
+      if(tokenData.userType === 'doctor')
+      {
+        navigate('/doctorProfile');
       }
-      setLoggedInUser(tokenData || "");
-    } catch (err) {
+      else
+      {
+        navigate('/profile');
+      }
+      setLoggedInUser(tokenData || '');
+    }
+    catch(err)
+    {
       console.log("Error==", err);
     }
   };
   useEffect(() => {
-    getLoggedInUserData();
+    getLoggedInUserData()
   }, []);
 
   // setting token while login
@@ -68,36 +74,23 @@ function Login() {
         email: userData.email,
         password: userData.password,
       };
-
-      var resData = {};
-      if (
-        userData.email === "admin@gmail.com" &&
-        userData.password === "Admin@2002"
-      ) {
-        resData = payload;
-        resData.userType = "admin";
-        resData.name = "Admin";
-        localStorage.setItem("token", JSON.stringify(resData));     // admin log in
-        toast.success("Logged in successfully as admin", {
+      const resp = await axios.post(`${config.backend_URL}/doctorLogin`, payload);
+      console.log(resp.data.data[0], "resp.data.data[0]");
+      const resData = resp.data.data[0];
+      if(resData)
+      {
+        resData.userType = 'doctor';
+        localStorage.setItem('token', JSON.stringify(resData));
+        toast.success("Logged in as doctor successfully", {
           theme: "colored",
         });
-        navigate("/profile");
-      } else {
-        const resp = await axios.post(`${config.backend_URL}/logIn`, payload);
-        // console.log(resp?.data?.data[0], "resp.data.data[0]");
-        resData = resp?.data?.data  ? resp?.data?.data[0] : {};
-        if (resData.email) {
-          resData.userType = "customer";
-          localStorage.setItem("token", JSON.stringify(resData));
-          toast.success("Logged in successfully", {
-            theme: "colored",
-          });
-          navigate("/profile");
-        } else {
-          toast.error("Invalid email or password", {
-            theme: "colored",
-          });
-        }
+        navigate("/doctorProfile");
+      }
+      else
+      {
+        toast.error("Invalid email or password", {
+          theme: "colored",
+        });
       }
     } catch (err) {
       console.log("Error==", err);
@@ -115,7 +108,7 @@ function Login() {
         <div>
           <div>
             <img
-              src="https://images.newscientist.com/wp-content/uploads/2021/12/14112035/PRI_214918718.jpg"
+              src="https://img.freepik.com/free-photo/veterinarian-checking-dog-medium-shot_23-2149143871.jpg"
               alt=""
               width="700px"
             />
@@ -127,7 +120,7 @@ function Login() {
               width: "20vw",
             }}
           >
-            <h3>Login</h3>
+            <h3>Login as A Doctor</h3>
             <TextField
               id="standard-basic"
               label="Email"
@@ -187,10 +180,10 @@ function Login() {
             <div
               className="loginLink"
               onClick={(e) => {
-                navigate("/sign-up");
+                navigate("/sign-up-as-doctor");
               }}
             >
-              New here? Sign up
+              New here? Sign up as a Doctor
             </div>
           </FormControl>
         </div>
@@ -200,4 +193,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginAsDoctor;

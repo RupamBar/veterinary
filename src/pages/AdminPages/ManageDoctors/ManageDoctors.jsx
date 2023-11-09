@@ -28,7 +28,7 @@ function ManageDoctors() {
   const [doctorList, setDoctorList] = useState([]);
   const [err, setErr] = useState(false);
   const [newUser, setNewUser] = useState({
-    doctorName: "",
+    name: "",
     email: "",
     password: "",
     phone: null,
@@ -48,7 +48,7 @@ function ManageDoctors() {
     setErr(false);
     setFlagToCallUpdateAPI(false);
     setNewUser({
-      doctorName: "",
+      name: "",
       email: "",
       password: "",
       phone: null,
@@ -116,6 +116,7 @@ function ManageDoctors() {
         `${config.backend_URL}/getDoctorByEmail/${newUser.email}`
       );
       if (res.data.data.length === 0) {
+        // const response = await axios.post(`${config.backend_URL}/signUpDoctor`,newUser);
         const resp = await axios.post(
           `${config.backend_URL}/addDoctor`,
           newUser
@@ -205,7 +206,7 @@ function ManageDoctors() {
     },
     { field: "id", headerName: "ID", width: 100 },
     {
-      field: "doctorName",
+      field: "name",
       headerName: "Name",
       width: 150,
     },
@@ -359,9 +360,9 @@ function ManageDoctors() {
               label="Name*"
               variant="outlined"
               style={{ width: "100%" }}
-              value={newUser.doctorName || ""}
+              value={newUser.name || ""}
               onChange={(e) => {
-                setNewUser({ ...newUser, doctorName: e.target.value });
+                setNewUser({ ...newUser, name: e.target.value });
               }}
             />
           </div>
@@ -447,7 +448,7 @@ function ManageDoctors() {
               if (
                 err ||
                 !newUser.email ||
-                !newUser.doctorName ||
+                !newUser.name ||
                 !newUser.password ||
                 !newUser.speciality
               ) {

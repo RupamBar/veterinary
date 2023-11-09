@@ -115,20 +115,29 @@ function ManageCustomers() {
   };
 
   const createUsers = async () => {
-    // console.log(newUser, "newUser");
     try
     {
-      const payload = {
-        email: newUser.email,
-        password: newUser.password,
-        name: newUser.name
-      };
-      const resp = await axios.post(`${config.backend_URL}/signUp`,payload);
-      const response = await axios.post(`${config.backend_URL}/addCustomer`,payload);
-      toast.success("User is created successfully", {
-        theme: "colored",
-      });
-      getAllCustomers();
+      const res = await axios.get(
+        `${config.backend_URL}/getCustomerByEmail/${newUser.email}`
+      );
+      if(res.data.data.length === 0) {
+        const payload = {
+          email: newUser.email,
+          password: newUser.password,
+          name: newUser.name
+        };
+        // const resp = await axios.post(`${config.backend_URL}/signUp`,payload);
+        const response = await axios.post(`${config.backend_URL}/addCustomer`,payload);
+        toast.success("User is created successfully", {
+          theme: "colored",
+        });
+        handleClose();
+        getAllCustomers();
+      } else {
+        toast.error("User already exists", {
+          theme: "colored",
+        });
+      }
     }
     catch(err)
     {

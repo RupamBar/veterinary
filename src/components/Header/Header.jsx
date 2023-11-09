@@ -257,9 +257,12 @@ function Header() {
               fontFamily: "'Manrope', sans-serif",
               fontWeight: "700",
             }}
+            onClick={(e) => {
+              navigate("/login-as-doctor");
+            }}
           >
-            <CallOutlinedIcon />
-            <div>Call</div>
+            {/* <CallOutlinedIcon /> */}
+            <div>Doctor</div>
           </Button>
           <Button
             style={{

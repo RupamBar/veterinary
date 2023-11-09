@@ -1,13 +1,42 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
-import "./HomePage.css"
+import "./HomePage.css";
+import { useNavigate } from 'react-router-dom';
 
 function HomePage() {
+  const navigate = useNavigate();
+  const [loggedInUser, setLoggedInUser] = useState('');
+
+  // getting token
+  const getLoggedInUserData = async() => {
+    try
+    {
+      const tokenData = JSON.parse(localStorage.getItem('token'));
+      // console.log(JSON.parse(localStorage.getItem('token')), "user");
+      if(tokenData.userType === 'doctor')
+      {
+        navigate('/doctorProfile');
+      }
+      else
+      {
+        navigate('/profile');
+      }
+      setLoggedInUser(tokenData || '');
+    }
+    catch(err)
+    {
+      console.log("Error==", err);
+    }
+  };
+  useEffect(() => {
+    getLoggedInUserData()
+  }, []);
+  
   return (
     <div>
       <Header />
-
+      {/* For Doctors */}
       {/* carousel */}
       <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">

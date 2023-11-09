@@ -29,30 +29,57 @@ function Profile() {
   const classes = useStyles();
   const navigate = useNavigate();
   const [user, setUser] = useState('');
-  const getUserData = async() => {
+  const [loggedInUser, setLoggedInUser] = useState('');
+
+  // getting token
+  const getLoggedInUserData = async() => {
     try
     {
-      const resp = await axios.get(`${config.backend_URL}/getLoggedInUser`);
-      setUser(resp?.data?.data);
+      const tokenData = JSON.parse(localStorage.getItem('token'));
+      // console.log(JSON.parse(localStorage.getItem('token')), "user");
+      if(tokenData.userType === 'doctor')
+      {
+        navigate('/doctorProfile');
+      }
+      else
+      {
+        navigate('/profile');
+      }
+      setLoggedInUser(tokenData || '');
     }
     catch(err)
     {
       console.log("Error==", err);
     }
   };
-
-
-
   useEffect(() => {
-    getUserData()
+    getLoggedInUserData()
   }, []);
 
+  // const getUserData = async() => {
+  //   try
+  //   {
+  //     const resp = await axios.get(`${config.backend_URL}/getLoggedInUser`);
+  //     setUser(resp?.data?.data);
+  //   }
+  //   catch(err)
+  //   {
+  //     console.log("Error==", err);
+  //   }
+  // };
+
+
+
+  // useEffect(() => {
+  //   getUserData()
+  // }, []);
+
   return (
-        user ? 
+        loggedInUser ? 
         <>
           {/* create a separate component for admin and user profile */}
-          <AuthorizedHeader user={user}/>
-          {(user?.user_metadata?.userType).toLowerCase() === ("admin").toLowerCase() ? <AdminDashboard user={user}/> : <CustomerProfile user={user}/>}
+          <AuthorizedHeader user={loggedInUser}/>
+          {(loggedInUser?.userType).toLowerCase() === ("admin").toLowerCase() ? <AdminDashboard user={loggedInUser}/> : <CustomerProfile user={loggedInUser}/>}
         </>
         :
         <>

@@ -235,7 +235,7 @@ function ManagePrescriptions() {
       renderCell: (params) => {
         // console.log(params, "params");
         return (
-          params?.row?.doctors?.doctorName
+          params?.row?.doctors?.name
         );
       },
     },
@@ -374,7 +374,7 @@ function ManagePrescriptions() {
               label="Doctor Name*"
               variant="outlined"
               style={{ width: "100%" }}
-              value={newUser?.doctors?.doctorName || ""}
+              value={newUser?.doctors?.name || ""}
               disabled
               // onChange={(e) => {
               //   setNewUser({ ...newUser, price: e.target.value || null });
