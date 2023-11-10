@@ -181,13 +181,18 @@ function DoctorProfile() {
         ).toLocaleDateString()} ${new Date(
           item.created_at
         ).toLocaleTimeString()}`,
+        label: `${item.pets.animals.name}, ${item.customers.name}, ${new Date(
+          item.slots.dateTime
+        ).toLocaleDateString()} ${new Date(
+          item.slots.dateTime
+        ).toLocaleTimeString()}`,
       };
       newArr.push(data);
     });
 
     console.log(newArr, "newArr????");
     setSelectedSlotId({ slotId: newArr[0].slotId });
-    setSelectedSlotLabel({ label: newArr[0].slotDate });
+    setSelectedSlotLabel({ label: newArr[0].label });
     setNewUser(newArr[0]);
     setCnsltNote(newArr[0].cnsltNote);
     setInvestigation(newArr[0].investigation);
