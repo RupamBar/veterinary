@@ -5,6 +5,7 @@
     align-items: center;
     font-family: 'Manrope', sans-serif;
     font-weight: 700;
+    box-shadow: 1px 1px 10px 5px rgb(156, 150, 150);
     /* background-color: red; */
 }
 
