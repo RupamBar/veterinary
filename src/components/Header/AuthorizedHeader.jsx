@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -49,6 +49,26 @@ function AuthorizedHeader({ user }) {
   const [anchorElGrooming, setAnchorElGrooming] = useState(null);
   const [anchorElCheckUp, setAnchorElCheckUp] = useState(null);
   const [anchorElLogout, setAnchorElLogout] = useState(null);
+
+  // console.log(user, "user????");
+  // console.log(userData, "userData>>>");
+
+  // getting token
+  const getUserData = async () => {
+    try {
+      // const resp = await axios.get(`${config.backend_URL}/getLoggedInUser`);
+      const tokenData = JSON.parse(localStorage.getItem("token"));
+      // console.log(JSON.parse(localStorage.getItem("token")), "user");
+      setUserData(tokenData || "");
+    } catch (err) {
+      console.log("Error==", err);
+    }
+  };
+
+  useEffect(() => {
+    getUserData();
+    setUserData(user);
+  });
 
   const handleLogout = async () => {
     // try

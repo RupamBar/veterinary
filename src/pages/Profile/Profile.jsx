@@ -41,9 +41,17 @@ function Profile() {
       {
         navigate('/doctorProfile');
       }
-      else
+      else if(tokenData.userType === 'customer')
       {
         navigate('/profile');
+      }
+      else if(tokenData.userType === 'admin')
+      {
+        navigate('/profile');
+      }
+      else
+      {
+        navigate('/employee-service');
       }
       setLoggedInUser(tokenData || '');
     }

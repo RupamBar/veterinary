@@ -19,6 +19,9 @@ import LoginAsDoctor from "./pages/LoginAsDoctor/LoginAsDoctor";
 import DoctorProfile from "./pages/DoctorProfile/DoctorProfile";
 
 import ManagePrescriptions from "./pages/AdminPages/ManagePrescriptions/ManagePrescriptions";
+
+import EmployeeService from './pages/EmployeeService/EmployeeService';
+
 import { ToastContainer, toast } from 'react-toastify';
 import "../node_modules/react-toastify/dist/ReactToastify.css"
 import { useNavigate } from 'react-router-dom';
@@ -63,6 +66,9 @@ function App() {
           <Route path="sign-up-as-doctor" element={<SignUpAsDoctor  />} />
           <Route path="login-as-doctor" element={<LoginAsDoctor  />} />
           <Route path="doctorProfile" element={<DoctorProfile  />} />
+
+          <Route path="employee-service" element={<EmployeeService  />} />
+          
         </Routes>
       </BrowserRouter>
       <ToastContainer/>

@@ -82,3 +82,22 @@
 .brandImages {
     width: 150px;
 }
+
+.employeeSec {
+    background-color: #f4cc37;
+    padding: 25px;
+    margin: 10px 10px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 10px 5px rgb(156, 150, 150);
+    font-family: 'Manrope', sans-serif;
+    font-weight: 500;
+}
+
+.labels {
+    margin-bottom: 10px;
+}
+
+.noticeSmall {
+    color: red;
+    font-size: 10px;
+}

@@ -213,7 +213,7 @@ function ManagePrescriptions() {
       renderCell: (params) => {
         // console.log(params, "params");
         return (
-          params?.row?.animals?.name
+          params?.row?.pets?.animals?.name
         );
       },
     },
@@ -348,7 +348,7 @@ function ManagePrescriptions() {
               label="Pet Name*"
               variant="outlined"
               style={{ width: "100%" }}
-              value={newUser?.animals?.name || ""}
+              value={newUser?.pets?.animals?.name || ""}
               disabled
               // onChange={(e) => {
               //   setNewUser({ ...newUser, name: e.target.value || null });

@@ -15,7 +15,8 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import config from "../../../config.json";
 import { useNavigate } from "react-router-dom";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import Autocomplete from "@mui/material/Autocomplete";
 import "./ManageEmployees.css";
 
 function ManageEmployees() {
@@ -28,6 +29,7 @@ function ManageEmployees() {
   const [doctorList, setDoctorList] = useState([]);
   const [err, setErr] = useState(false);
   const [newUser, setNewUser] = useState({
+    empCode: "",
     name: "",
     email: "",
     // password: "",
@@ -49,6 +51,7 @@ function ManageEmployees() {
     setErr(false);
     setFlagToCallUpdateAPI(false);
     setNewUser({
+      empCode: "",
       name: "",
       email: "",
       // password: "",
@@ -211,6 +214,11 @@ function ManageEmployees() {
     },
     { field: "id", headerName: "ID", width: 100 },
     {
+      field: "empCode",
+      headerName: "Employee Code",
+      width: 150,
+    },
+    {
       field: "name",
       headerName: "Name",
       width: 150,
@@ -261,11 +269,16 @@ function ManageEmployees() {
     <div>
       <AuthorizedHeader user={stateData.user} />
       <div className="adminPageBg">
-      <div style={{display : 'flex', alignItems: 'center'}}>
-            <div>
-                <ArrowBackIcon style={{cursor: 'pointer'}} onClick={(e) => {navigate('/profile')}}/>
-            </div>
-            <div className="adminPageHeading">Manage Employess</div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div>
+            <ArrowBackIcon
+              style={{ cursor: "pointer" }}
+              onClick={(e) => {
+                navigate("/profile");
+              }}
+            />
+          </div>
+          <div className="adminPageHeading">Manage Employess</div>
         </div>
         <div className="addBtnContainer">
           <Button
@@ -329,6 +342,18 @@ function ManageEmployees() {
           <div className="textFieldStyle">
             <TextField
               id="outlined-basic"
+              label="Employee Code*"
+              variant="outlined"
+              style={{ width: "100%" }}
+              value={newUser.empCode || ""}
+              onChange={(e) => {
+                setNewUser({ ...newUser, empCode: e.target.value });
+              }}
+            />
+          </div>
+          <div className="textFieldStyle">
+            <TextField
+              id="outlined-basic"
               label="Name*"
               variant="outlined"
               style={{ width: "100%" }}
@@ -351,15 +376,17 @@ function ManageEmployees() {
             />
           </div>
           <div className="textFieldStyle">
-            <TextField
-              id="outlined-basic"
-              label="Gender*"
-              variant="outlined"
-              style={{ width: "100%" }}
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={["Male", "Female"]}
               value={newUser.gender || ""}
-              onChange={(e) => {
-                setNewUser({ ...newUser, gender: e.target.value });
+              onChange={(e, params) => {
+                setNewUser({ ...newUser, gender: params });
               }}
+              renderInput={(params) => (
+                <TextField {...params} label="Gender*" />
+              )}
             />
           </div>
           <div className="textFieldStyle">
@@ -443,6 +470,7 @@ function ManageEmployees() {
             onClick={(e) => {
               if (
                 err ||
+                !newUser.empCode ||
                 !newUser.email ||
                 !newUser.name ||
                 !newUser.department ||
