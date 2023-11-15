@@ -27,3 +27,14 @@
     flex-direction: row;
     width: 20%;
 }
+
+.dialogSections {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.sectionParts {
+    width: 45%;
+}

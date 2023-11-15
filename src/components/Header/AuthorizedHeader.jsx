@@ -13,6 +13,14 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import config from "../../config.json";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+import { Autocomplete, TextField } from "@mui/material";
+import { TextareaAutosize } from "@mui/base";
 
 const useStyles = makeStyles()((theme) => ({
   // Define your styles here
@@ -38,6 +46,10 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 function AuthorizedHeader({ user }) {
   const classes = useStyles();
   const navigate = useNavigate();
@@ -50,8 +62,11 @@ function AuthorizedHeader({ user }) {
   const [anchorElCheckUp, setAnchorElCheckUp] = useState(null);
   const [anchorElLogout, setAnchorElLogout] = useState(null);
 
-  // console.log(user, "user????");
-  // console.log(userData, "userData>>>");
+  const [fetchedUserData, setFetchedUserData] = useState("");
+  const [open, setOpen] = React.useState(false);
+
+  // console.log(fetchedUserData, "fetchedUserData");
+  console.log(userData, "userData>>>");
 
   // getting token
   const getUserData = async () => {
@@ -108,6 +123,79 @@ function AuthorizedHeader({ user }) {
     setAnchorElLogout(null);
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpen(false);
+  };
+
+  // Customer work
+  const getCustomerById = async () => {
+    try {
+      const res = await axios.get(
+        `${config.backend_URL}/getCustomerById/${userData?.id}`
+      );
+      console.log(res.data.data, "res.data.data?>?>?>");
+      setFetchedUserData(res.data.data[0] || {});
+
+      handleClickOpen();
+    } catch (err) {
+      console.log("Error==", err.message);
+    }
+  };
+
+  // Employee work
+  const getEmployeeById = async () => {
+    try {
+      const resp = await axios.get(
+        `${config.backend_URL}/getEmployeeByEmpCode/${userData?.empCode}`
+      );
+
+      const res = await axios.get(
+        `${config.backend_URL}/getEmployeeById/${resp?.data?.data[0]?.id}`
+      );
+      console.log(res.data.data, "res.data.data?>?>?>");
+      setFetchedUserData(res.data.data[0] || {});
+
+      handleClickOpen();
+    } catch (err) {
+      console.log("Error==", err.message);
+    }
+  };
+
+  // Doctor work
+  const getDoctorById = async () => {
+    try {
+      const res = await axios.get(
+        `${config.backend_URL}/getDoctorById/${userData?.id}`
+      );
+      console.log(res.data.data, "res.data.data?>?>?>");
+      setFetchedUserData(res.data.data[0] || {});
+
+      handleClickOpen();
+    } catch (err) {
+      console.log("Error==", err.message);
+    }
+  };
+
+  // All update from one function
+  const updateProfileData = async (table) => {
+    try {
+      const res = await axios.put(
+        `${config.backend_URL}/updateCustomerProfile/${table}`,
+        fetchedUserData
+      );
+      toast.success("Profile updated successfully", {
+        theme: "colored",
+      });
+      handleCloseDialog();
+    } catch (err) {
+      console.log("Error ==", err.message);
+    }
+  };
+
   return (
     <div>
       <div className="navbar">
@@ -130,27 +218,10 @@ function AuthorizedHeader({ user }) {
                   fontFamily: "'Manrope', sans-serif",
                   fontWeight: "700",
                 }}
-                onClick={(e) => handleClick(e, "animalFoods")}
+                onClick={(e) => navigate("/animal-foods")}
               >
                 Animal Foods
-                {!animalFood ? <ExpandMoreIcon /> : <ExpandLessIcon />}
               </Button>
-              <Menu
-                anchorEl={animalFood}
-                keepMounted
-                open={Boolean(animalFood)}
-                onClose={handleClose}
-                // style={{
-                //   position: "absolute",
-                //   top: "30px",
-                // }}
-              >
-                <MenuItem onClick={handleClose}>Dog Food</MenuItem>
-                <MenuItem onClick={handleClose}>Cat Food</MenuItem>
-                <MenuItem onClick={handleClose}>Fish Food</MenuItem>
-                <MenuItem onClick={handleClose}>Bird Food</MenuItem>
-                <MenuItem onClick={handleClose}>Small Animal Food</MenuItem>
-              </Menu>
             </div>
             <div>
               <Button
@@ -176,11 +247,30 @@ function AuthorizedHeader({ user }) {
                 //   top: "30px",
                 // }}
               >
-                <MenuItem onClick={handleClose}>Dog</MenuItem>
-                <MenuItem onClick={handleClose}>Cat</MenuItem>
-                <MenuItem onClick={handleClose}>Fish</MenuItem>
-                <MenuItem onClick={handleClose}>Bird</MenuItem>
-                <MenuItem onClick={handleClose}>Small Animal</MenuItem>
+                <MenuItem
+                  onClick={(e) => {
+                    navigate("/dogs");
+                    handleClose();
+                  }}
+                >
+                  Dogs
+                </MenuItem>
+                <MenuItem
+                  onClick={(e) => {
+                    navigate("/cats");
+                    handleClose();
+                  }}
+                >
+                  Cats
+                </MenuItem>
+                <MenuItem
+                  onClick={(e) => {
+                    navigate("/birds");
+                    handleClose();
+                  }}
+                >
+                  Birds
+                </MenuItem>
               </Menu>
             </div>
             <div>
@@ -192,25 +282,10 @@ function AuthorizedHeader({ user }) {
                   fontFamily: "'Manrope', sans-serif",
                   fontWeight: "700",
                 }}
-                onClick={(e) => handleClick(e, "medicines")}
+                onClick={(e) => navigate("/medicines")}
               >
                 Medicines
-                {!anchorElMedicines ? <ExpandMoreIcon /> : <ExpandLessIcon />}
               </Button>
-              <Menu
-                anchorEl={anchorElMedicines}
-                keepMounted
-                open={Boolean(anchorElMedicines)}
-                onClose={handleClose}
-                // style={{
-                //   position: "absolute",
-                //   top: "30px",
-                // }}
-              >
-                <MenuItem onClick={handleClose}>Option 1</MenuItem>
-                <MenuItem onClick={handleClose}>Option 2</MenuItem>
-                <MenuItem onClick={handleClose}>Option 3</MenuItem>
-              </Menu>
             </div>
             <div>
               <Button
@@ -221,25 +296,10 @@ function AuthorizedHeader({ user }) {
                   fontFamily: "'Manrope', sans-serif",
                   fontWeight: "700",
                 }}
-                onClick={(e) => handleClick(e, "assets")}
+                onClick={(e) => navigate("/assets")}
               >
                 Assets
-                {!anchorElAssets ? <ExpandMoreIcon /> : <ExpandLessIcon />}
               </Button>
-              <Menu
-                anchorEl={anchorElAssets}
-                keepMounted
-                open={Boolean(anchorElAssets)}
-                onClose={handleClose}
-                // style={{
-                //   position: "absolute",
-                //   top: "30px",
-                // }}
-              >
-                <MenuItem onClick={handleClose}>House</MenuItem>
-                <MenuItem onClick={handleClose}>Toys</MenuItem>
-                <MenuItem onClick={handleClose}>Bathing</MenuItem>
-              </Menu>
             </div>
             <div>
               <Button
@@ -332,11 +392,17 @@ function AuthorizedHeader({ user }) {
           >
             <MenuItem
               onClick={(e) => {
-                // handleClose();
-                // handleLogout();
+                handleClose();
+                if (userData?.userType === "customer") {
+                  getCustomerById();
+                } else if (userData?.userType === "employee") {
+                  getEmployeeById();
+                } else if (userData?.userType === "doctor") {
+                  getDoctorById();
+                }
               }}
             >
-              Profile
+              Edit Profile
             </MenuItem>
             <MenuItem
               onClick={(e) => {
@@ -349,6 +415,234 @@ function AuthorizedHeader({ user }) {
           </Menu>
         </div>
       </div>
+
+      <Dialog
+        open={open}
+        maxWidth="lg"
+        fullWidth="true"
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseDialog}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>Edit Your Profile</DialogTitle>
+        <DialogContent>
+          <div style={{ color: "red", marginBottom: "10px" }}>
+            '*' fields are mandatory
+          </div>
+          <div className="dialogSections">
+            <div className="sectionParts">
+              {userData?.userType === "employee" ? (
+                <TextField
+                  id="outlined-basic"
+                  label="Employee Code*"
+                  variant="outlined"
+                  disabled
+                  style={{ width: "100%", margin: "10px 0px" }}
+                  value={fetchedUserData.empCode || ""}
+                  onChange={(e) => {
+                    setFetchedUserData({
+                      ...fetchedUserData,
+                      empCode: e.target.value,
+                    });
+                  }}
+                />
+              ) : null}
+              {userData?.userType === "employee" ||
+              userData?.userType === "doctor" ||
+              userData?.userType === "customer" ? (
+                <TextField
+                  id="outlined-basic"
+                  label="Name*"
+                  variant="outlined"
+                  style={{ width: "100%", margin: "10px 0px" }}
+                  value={fetchedUserData.name || ""}
+                  onChange={(e) => {
+                    setFetchedUserData({
+                      ...fetchedUserData,
+                      name: e.target.value,
+                    });
+                  }}
+                />
+              ) : null}
+              {userData?.userType === "employee" ||
+              userData?.userType === "doctor" ||
+              userData?.userType === "customer" ? (
+                <TextField
+                  id="outlined-basic"
+                  label="Email*"
+                  variant="outlined"
+                  style={{ width: "100%", margin: "10px 0px" }}
+                  value={fetchedUserData.email || ""}
+                  disabled
+                  onChange={(e) => {
+                    setFetchedUserData({
+                      ...fetchedUserData,
+                      email: e.target.value,
+                    });
+                  }}
+                />
+              ) : null}
+              {userData?.userType === "employee" ||
+              userData?.userType === "doctor" ||
+              userData?.userType === "customer" ? (
+                <TextField
+                  id="outlined-basic"
+                  label="Phone Number"
+                  variant="outlined"
+                  type="number"
+                  style={{ width: "100%", margin: "10px 0px" }}
+                  value={fetchedUserData.phone || ""}
+                  onChange={(e) => {
+                    setFetchedUserData({
+                      ...fetchedUserData,
+                      phone: e.target.value || null,
+                    });
+                  }}
+                />
+              ) : null}
+              {userData?.userType === "employee" ||
+              userData?.userType === "doctor" ||
+              userData?.userType === "customer" ? (
+                <>
+                  <label>Address</label>
+                  <TextareaAutosize
+                    id="outlined-basic"
+                    label="Address"
+                    variant="outlined"
+                    style={{
+                      width: "100%",
+                      height: "20vh",
+                      margin: "10px 0px",
+                    }}
+                    value={fetchedUserData.address || ""}
+                    onChange={(e) => {
+                      setFetchedUserData({
+                        ...fetchedUserData,
+                        address: e.target.value,
+                      });
+                    }}
+                  />
+                </>
+              ) : null}
+            </div>
+            <div className="sectionParts">
+              {userData?.userType === "employee" ||
+              userData?.userType === "doctor" ||
+              userData?.userType === "customer" ? (
+                <TextField
+                  id="outlined-basic"
+                  label="City"
+                  variant="outlined"
+                  style={{ width: "100%", margin: "10px 0px" }}
+                  value={fetchedUserData.city || ""}
+                  onChange={(e) => {
+                    setFetchedUserData({
+                      ...fetchedUserData,
+                      city: e.target.value,
+                    });
+                  }}
+                />
+              ) : null}
+              {userData?.userType === "employee" ||
+              userData?.userType === "doctor" ||
+              userData?.userType === "customer" ? (
+                <TextField
+                  id="outlined-basic"
+                  label="State"
+                  variant="outlined"
+                  style={{ width: "100%", margin: "10px 0px" }}
+                  value={fetchedUserData.state || ""}
+                  onChange={(e) => {
+                    setFetchedUserData({
+                      ...fetchedUserData,
+                      state: e.target.value,
+                    });
+                  }}
+                />
+              ) : null}
+              {userData?.userType === "employee" ||
+              userData?.userType === "doctor" ||
+              userData?.userType === "customer" ? (
+                <TextField
+                  id="outlined-basic"
+                  label="Pincode"
+                  variant="outlined"
+                  type="number"
+                  style={{ width: "100%", margin: "10px 0px" }}
+                  value={fetchedUserData.pincode || ""}
+                  onChange={(e) => {
+                    setFetchedUserData({
+                      ...fetchedUserData,
+                      pincode: e.target.value || null,
+                    });
+                  }}
+                />
+              ) : null}
+              {userData?.userType === "doctor" ? (
+                <TextField
+                  id="outlined-basic"
+                  label="Speciality"
+                  variant="outlined"
+                  style={{ width: "100%", margin: "10px 0px" }}
+                  value={fetchedUserData.speciality || ""}
+                  onChange={(e) => {
+                    setFetchedUserData({
+                      ...fetchedUserData,
+                      speciality: e.target.value,
+                    });
+                  }}
+                />
+              ) : null}
+              {userData?.userType === "employee" ? (
+                <TextField
+                  id="outlined-basic"
+                  label="Department"
+                  variant="outlined"
+                  style={{ width: "100%", margin: "10px 0px" }}
+                  value={fetchedUserData.department || ""}
+                  onChange={(e) => {
+                    setFetchedUserData({
+                      ...fetchedUserData,
+                      department: e.target.value,
+                    });
+                  }}
+                />
+              ) : null}
+              {userData?.userType === "employee" ? (
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={["Male", "Female"]}
+                  value={fetchedUserData.gender || ""}
+                  onChange={(e, params) => {
+                    setFetchedUserData({ ...fetchedUserData, gender: params });
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Gender*" />
+                  )}
+                />
+              ) : null}
+            </div>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button
+            onClick={(e) => {
+              if (!fetchedUserData.name) {
+                toast.error("Please fill the name field", {
+                  theme: "colored",
+                });
+              } else {
+                updateProfileData(userData?.userType + "s");
+              }
+            }}
+          >
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

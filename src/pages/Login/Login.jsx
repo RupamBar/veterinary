@@ -69,6 +69,8 @@ function Login() {
         password: userData.password,
       };
 
+      console.log(payload, "payload");
+
       var resData = {};
       if (
         userData.email === "admin@gmail.com" &&
@@ -86,7 +88,7 @@ function Login() {
         const resp = await axios.post(`${config.backend_URL}/logIn`, payload);
         // console.log(resp?.data?.data[0], "resp.data.data[0]");
         resData = resp?.data?.data  ? resp?.data?.data[0] : {};
-        if (resData.email) {
+        if (resData?.email) {
           resData.userType = "customer";
           localStorage.setItem("token", JSON.stringify(resData));
           toast.success("Logged in successfully", {
@@ -101,7 +103,7 @@ function Login() {
       }
     } catch (err) {
       console.log("Error==", err);
-      toast.error(err?.message, {
+      toast.error("Invalid email or password", {
         theme: "colored",
       });
     }

@@ -450,12 +450,21 @@ function EmployeeService() {
                           style={{
                             backgroundColor: "dodgerblue",
                             color: "white",
+                            marginRight : '10px'
                           }}
                           onClick={(e) => {
                             addGroomingData();
                           }}
                         >
                           Submit
+                        </Button>
+                        <Button
+                          onClick={(e) => {
+                            // addGroomingData();
+                            resetPage();
+                          }}
+                        >
+                          Reset
                         </Button>
                       </div>
                     </div>

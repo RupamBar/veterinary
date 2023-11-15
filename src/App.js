@@ -22,6 +22,13 @@ import ManagePrescriptions from "./pages/AdminPages/ManagePrescriptions/ManagePr
 
 import EmployeeService from './pages/EmployeeService/EmployeeService';
 
+import AnimalFoods from './pages/AnimalFoods/AnimalFoods';
+import Dogs from './pages/Dogs/Dogs';
+import Cats from './pages/Cats/Cats';
+import Birds from './pages/Birds/Birds';
+import Medicines from './pages/Medicines/Medicines';
+import Assets from './pages/Assets/Assets';
+
 import { ToastContainer, toast } from 'react-toastify';
 import "../node_modules/react-toastify/dist/ReactToastify.css"
 import { useNavigate } from 'react-router-dom';
@@ -68,6 +75,13 @@ function App() {
           <Route path="doctorProfile" element={<DoctorProfile  />} />
 
           <Route path="employee-service" element={<EmployeeService  />} />
+
+          <Route path="animal-foods" element={<AnimalFoods  />} />
+          <Route path="dogs" element={<Dogs  />} />
+          <Route path="cats" element={<Cats  />} /> 
+          <Route path="birds" element={<Birds  />} />
+          <Route path="medicines" element={<Medicines  />} />
+          <Route path="assets" element={<Assets  />} />
           
         </Routes>
       </BrowserRouter>

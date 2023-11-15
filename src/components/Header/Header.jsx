@@ -6,6 +6,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
+import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import "./Header.css";
 import { makeStyles } from "tss-react/mui";
 // import { makeStyles } from '@mui/styles';
@@ -69,7 +70,12 @@ function Header() {
   return (
     <div>
       <div className="navbar">
-        <div className="logoDiv" onClick={(e) => {navigate("/")}}>
+        <div
+          className="logoDiv"
+          onClick={(e) => {
+            navigate("/");
+          }}
+        >
           <img src={Logo} alt="Logo" width="150px" />
         </div>
         <div className="animalList">
@@ -77,33 +83,15 @@ function Header() {
             <Button
               aria-controls="simple-menu"
               aria-haspopup="true"
-              className={classes.menuTexts}
-              onClick={(e) => handleClick(e, "animalFoods")}
               style={{
                 color: "black",
                 fontFamily: "'Manrope', sans-serif",
                 fontWeight: "700",
               }}
+              onClick={(e) => navigate("/animal-foods")}
             >
               Animal Foods
-              {!animalFood ? <ExpandMoreIcon /> : <ExpandLessIcon />}
             </Button>
-            <Menu
-              anchorEl={animalFood}
-              keepMounted
-              open={Boolean(animalFood)}
-              onClose={handleClose}
-              // style={{
-              //   position: "absolute",
-              //   // top: "30px",
-              // }}
-            >
-              <MenuItem onClick={handleClose}>Dog Food</MenuItem>
-              <MenuItem onClick={handleClose}>Cat Food</MenuItem>
-              <MenuItem onClick={handleClose}>Fish Food</MenuItem>
-              <MenuItem onClick={handleClose}>Bird Food</MenuItem>
-              <MenuItem onClick={handleClose}>Small Animal Food</MenuItem>
-            </Menu>
           </div>
           <div>
             <Button
@@ -129,11 +117,30 @@ function Header() {
               //   top: "30px",
               // }}
             >
-              <MenuItem onClick={handleClose}>Dog</MenuItem>
-              <MenuItem onClick={handleClose}>Cat</MenuItem>
-              <MenuItem onClick={handleClose}>Fish</MenuItem>
-              <MenuItem onClick={handleClose}>Bird</MenuItem>
-              <MenuItem onClick={handleClose}>Small Animal</MenuItem>
+              <MenuItem
+                onClick={(e) => {
+                  navigate("/dogs")
+                  handleClose();
+                }}
+              >
+                Dogs
+              </MenuItem>
+              <MenuItem
+                onClick={(e) => {
+                  navigate("/cats")
+                  handleClose();
+                }}
+              >
+                Cats
+              </MenuItem>
+              <MenuItem
+                onClick={(e) => {
+                  navigate("/birds")
+                  handleClose();
+                }}
+              >
+                Birds
+              </MenuItem>
             </Menu>
           </div>
           <div>
@@ -145,25 +152,10 @@ function Header() {
                 fontFamily: "'Manrope', sans-serif",
                 fontWeight: "700",
               }}
-              onClick={(e) => handleClick(e, "medicines")}
+              onClick={(e) => navigate("/medicines")}
             >
               Medicines
-              {!anchorElMedicines ? <ExpandMoreIcon /> : <ExpandLessIcon />}
             </Button>
-            <Menu
-              anchorEl={anchorElMedicines}
-              keepMounted
-              open={Boolean(anchorElMedicines)}
-              onClose={handleClose}
-              // style={{
-              //   position: "absolute",
-              //   top: "30px",
-              // }}
-            >
-              <MenuItem onClick={handleClose}>Option 1</MenuItem>
-              <MenuItem onClick={handleClose}>Option 2</MenuItem>
-              <MenuItem onClick={handleClose}>Option 3</MenuItem>
-            </Menu>
           </div>
           <div>
             <Button
@@ -174,25 +166,10 @@ function Header() {
                 fontFamily: "'Manrope', sans-serif",
                 fontWeight: "700",
               }}
-              onClick={(e) => handleClick(e, "assets")}
+              onClick={(e) => navigate("/assets")}
             >
               Assets
-              {!anchorElAssets ? <ExpandMoreIcon /> : <ExpandLessIcon />}
             </Button>
-            <Menu
-              anchorEl={anchorElAssets}
-              keepMounted
-              open={Boolean(anchorElAssets)}
-              onClose={handleClose}
-              // style={{
-              //   position: "absolute",
-              //   top: "30px",
-              // }}
-            >
-              <MenuItem onClick={handleClose}>House</MenuItem>
-              <MenuItem onClick={handleClose}>Toys</MenuItem>
-              <MenuItem onClick={handleClose}>Bathing</MenuItem>
-            </Menu>
           </div>
           <div>
             <Button
@@ -261,7 +238,7 @@ function Header() {
               navigate("/login-as-doctor");
             }}
           >
-            {/* <CallOutlinedIcon /> */}
+            <MedicalServicesIcon />
             <div>Doctor</div>
           </Button>
           <Button
@@ -277,16 +254,22 @@ function Header() {
               navigate("/login");
             }}
           >
-            <AccountCircleOutlinedIcon style={{
-              color: "black",
-              fontFamily: "'Manrope', sans-serif",
-              fontWeight: "700",
-            }}/>
-            <div style={{
-              color: "black",
-              fontFamily: "'Manrope', sans-serif",
-              fontWeight: "700",
-            }}>Login / Sign Up</div>
+            <AccountCircleOutlinedIcon
+              style={{
+                color: "black",
+                fontFamily: "'Manrope', sans-serif",
+                fontWeight: "700",
+              }}
+            />
+            <div
+              style={{
+                color: "black",
+                fontFamily: "'Manrope', sans-serif",
+                fontWeight: "700",
+              }}
+            >
+              Login / Sign Up
+            </div>
           </Button>
         </div>
       </div>
