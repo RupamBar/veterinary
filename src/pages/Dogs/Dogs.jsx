@@ -292,6 +292,9 @@ function Dogs() {
           right: "0px",
           bottom: "0px",
         }}
+        onClick={(e) => {
+          navigate('/add-to-cart')
+        }}
       >
         <Badge badgeContent={addedToCart.length || 0} color="error" size='large'>
         <Fab style={{ backgroundColor: "#f5d038" }} aria-label="add">

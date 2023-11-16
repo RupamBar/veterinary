@@ -6,8 +6,10 @@ import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import Badge from "@mui/material/Badge";
+import { useNavigate } from "react-router-dom";
 
 function CustomerProfile({ user }) {
+  const navigate = useNavigate();
   const [addedToCart, setAddedToCart] = useState([]);
   const [addedProductIds, setAddedProductIds] = useState([]);
 
@@ -132,7 +134,10 @@ function CustomerProfile({ user }) {
       {/* shop by pets */}
       <h1 className="petFeatureContainer_Heading">-----Shop By Pets-----</h1>
       <div className="petFeatureContainer">
-        <div className="petFeatureCards">
+        <div className="petFeatureCards" onClick={(e) => {
+          e.preventDefault();
+          navigate("/dogs")
+          }}>
           <img
             src="https://www.petsy.online/cdn/shop/files/Dog_4c76c619-d647-4286-b2bf-b002fa636931_329x329.png?v=1683200428"
             alt=""
@@ -140,7 +145,10 @@ function CustomerProfile({ user }) {
           />
           <div className="petFeatureText">Dogs</div>
         </div>
-        <div className="petFeatureCards">
+        <div className="petFeatureCards" onClick={(e) => {
+          e.preventDefault();
+          navigate("/cats")
+          }}>
           <img
             src="https://www.petsy.online/cdn/shop/files/Cat_bcc29749-ff7b-4844-a60e-8549a3d1869d_329x329.png?v=1683200428"
             alt=""
@@ -148,7 +156,10 @@ function CustomerProfile({ user }) {
           />
           <div className="petFeatureText">Cats</div>
         </div>
-        <div className="petFeatureCards">
+        <div className="petFeatureCards" onClick={(e) => {
+          e.preventDefault();
+          alert("We are out of stock for other pets")
+          }}>
           <img
             src="https://www.petsy.online/cdn/shop/files/Small-Animals_5d6801ad-ba44-452e-910c-a27ecd0af843_329x329.png?v=1683200428"
             alt=""
@@ -156,7 +167,10 @@ function CustomerProfile({ user }) {
           />
           <div className="petFeatureText">Small Animals</div>
         </div>
-        <div className="petFeatureCards">
+        <div className="petFeatureCards" onClick={(e) => {
+          e.preventDefault();
+          navigate("/birds")
+          }}>
           <img
             src="https://www.petsy.online/cdn/shop/files/Birds_d6fe0dd1-1c21-45ac-adf9-a742e6e1470a_329x329.png?v=1683200428"
             alt=""
@@ -251,6 +265,9 @@ function CustomerProfile({ user }) {
           height: "100",
           right: "0px",
           bottom: "0px",
+        }}
+        onClick={(e) => {
+          navigate('/add-to-cart')
         }}
       >
         <Badge badgeContent={addedToCart.length || 0} color="error" size='large'>

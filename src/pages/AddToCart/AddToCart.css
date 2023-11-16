@@ -1,0 +1,55 @@
+.cartMainDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+.productsContainer {
+    border: 1px solid rgba(207, 207, 208, 0.474);
+    padding: 10px;
+    width: 60%;
+    height: 60vh;
+    overflow-y: auto;
+    background-color: rgba(207, 207, 208, 0.474);
+}
+
+.billSection {
+    width: 35%;
+}
+
+.productsDetails {
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 8px;
+    margin: 10px 0px;
+    background-color: white;
+}
+
+.tableClass {
+    width: 100%;
+}
+
+.totalAmountSec {
+    border-top: 1px solid black;
+    font-size: 25px;
+}
+
+.buyBtn {
+    text-align: center;
+    margin: 20px 0px;
+}
+
+.counter {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.countText {
+    margin: 0px 10px;
+}

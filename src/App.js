@@ -29,6 +29,10 @@ import Birds from './pages/Birds/Birds';
 import Medicines from './pages/Medicines/Medicines';
 import Assets from './pages/Assets/Assets';
 
+import AddToCart from './pages/AddToCart/AddToCart';
+import BookSlots from './pages/BookSlots/BookSlots';
+import BookGroomSlot from './pages/BookGroomSlot/BookGroomSlot';
+
 import { ToastContainer, toast } from 'react-toastify';
 import "../node_modules/react-toastify/dist/ReactToastify.css"
 import { useNavigate } from 'react-router-dom';
@@ -82,6 +86,10 @@ function App() {
           <Route path="birds" element={<Birds  />} />
           <Route path="medicines" element={<Medicines  />} />
           <Route path="assets" element={<Assets  />} />
+
+          <Route path="add-to-cart" element={<AddToCart  />} />
+          <Route path="appointment-booking" element={<BookSlots  />} />
+          <Route path="groom-slot-booking" element={<BookGroomSlot  />} />
           
         </Routes>
       </BrowserRouter>

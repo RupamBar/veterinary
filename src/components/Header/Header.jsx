@@ -119,7 +119,7 @@ function Header() {
             >
               <MenuItem
                 onClick={(e) => {
-                  navigate("/dogs")
+                  navigate("/dogs");
                   handleClose();
                 }}
               >
@@ -127,7 +127,7 @@ function Header() {
               </MenuItem>
               <MenuItem
                 onClick={(e) => {
-                  navigate("/cats")
+                  navigate("/cats");
                   handleClose();
                 }}
               >
@@ -135,7 +135,7 @@ function Header() {
               </MenuItem>
               <MenuItem
                 onClick={(e) => {
-                  navigate("/birds")
+                  navigate("/birds");
                   handleClose();
                 }}
               >
@@ -180,24 +180,14 @@ function Header() {
                 fontFamily: "'Manrope', sans-serif",
                 fontWeight: "700",
               }}
-              onClick={(e) => handleClick(e, "grooming")}
+              onClick={(e) => {
+                e.preventDefault();
+                handleClick(e, "grooming");
+                navigate("/groom-slot-booking");
+              }}
             >
               Grooming
-              {!anchorElGrooming ? <ExpandMoreIcon /> : <ExpandLessIcon />}
             </Button>
-            <Menu
-              anchorEl={anchorElGrooming}
-              keepMounted
-              open={Boolean(anchorElGrooming)}
-              onClose={handleClose}
-              // style={{
-              //   position: "absolute",
-              //   top: "30px",
-              // }}
-            >
-              <MenuItem onClick={handleClose}>Hair Cut</MenuItem>
-              <MenuItem onClick={handleClose}>Bath</MenuItem>
-            </Menu>
           </div>
           <div>
             <Button
@@ -223,7 +213,15 @@ function Header() {
               //   top: "30px",
               // }}
             >
-              <MenuItem onClick={handleClose}>Doctor Consultancy</MenuItem>
+              <MenuItem
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleClose();
+                  navigate("/appointment-booking");
+                }}
+              >
+                Doctor Consultancy
+              </MenuItem>
             </Menu>
           </div>
         </div>

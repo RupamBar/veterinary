@@ -66,10 +66,10 @@ function AuthorizedHeader({ user }) {
   const [open, setOpen] = React.useState(false);
 
   // console.log(fetchedUserData, "fetchedUserData");
-  console.log(userData, "userData>>>");
+  // console.log(userData, "userData>>>");
 
   // getting token
-  const getUserData = async () => {
+  const getUserData = () => {
     try {
       // const resp = await axios.get(`${config.backend_URL}/getLoggedInUser`);
       const tokenData = JSON.parse(localStorage.getItem("token"));
@@ -81,8 +81,8 @@ function AuthorizedHeader({ user }) {
   };
 
   useEffect(() => {
-    getUserData();
     setUserData(user);
+    getUserData();
   });
 
   const handleLogout = async () => {
@@ -156,7 +156,7 @@ function AuthorizedHeader({ user }) {
       const res = await axios.get(
         `${config.backend_URL}/getEmployeeById/${resp?.data?.data[0]?.id}`
       );
-      console.log(res.data.data, "res.data.data?>?>?>");
+      // console.log(res.data.data, "res.data.data?>?>?>");
       setFetchedUserData(res.data.data[0] || {});
 
       handleClickOpen();
@@ -187,6 +187,13 @@ function AuthorizedHeader({ user }) {
         `${config.backend_URL}/updateCustomerProfile/${table}`,
         fetchedUserData
       );
+      console.log(res.data.data, "res.data.data");
+
+      let resData = res.data.data[0];
+      resData.userType = userData.userType;
+      localStorage.setItem("token", JSON.stringify(resData));
+      getUserData();
+
       toast.success("Profile updated successfully", {
         theme: "colored",
       });
@@ -310,24 +317,14 @@ function AuthorizedHeader({ user }) {
                   fontFamily: "'Manrope', sans-serif",
                   fontWeight: "700",
                 }}
-                onClick={(e) => handleClick(e, "grooming")}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleClick(e, "grooming");
+                  navigate("/groom-slot-booking");
+                }}
               >
                 Grooming
-                {!anchorElGrooming ? <ExpandMoreIcon /> : <ExpandLessIcon />}
               </Button>
-              <Menu
-                anchorEl={anchorElGrooming}
-                keepMounted
-                open={Boolean(anchorElGrooming)}
-                onClose={handleClose}
-                // style={{
-                //   position: "absolute",
-                //   top: "30px",
-                // }}
-              >
-                <MenuItem onClick={handleClose}>Hair Cut</MenuItem>
-                <MenuItem onClick={handleClose}>Bath</MenuItem>
-              </Menu>
             </div>
             <div>
               <Button
@@ -353,7 +350,11 @@ function AuthorizedHeader({ user }) {
                 //   top: "30px",
                 // }}
               >
-                <MenuItem onClick={handleClose}>Doctor Consultancy</MenuItem>
+                <MenuItem onClick={(e) => {
+                  e.preventDefault();
+                  handleClose();
+                  navigate("/appointment-booking");
+                }}>Doctor Consultancy</MenuItem>
               </Menu>
             </div>
           </div>

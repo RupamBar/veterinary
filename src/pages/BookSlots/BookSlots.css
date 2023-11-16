@@ -1,0 +1,37 @@
+.formContainerSlot {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.appointmentForm {
+    width: 50%;
+    padding: 20px;
+    box-shadow: 1px 1px 10px 5px rgb(156, 150, 150);
+}
+
+.btnContainer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.checkUpImg {
+    /* margin-top: 30px; */
+}
+
+.unAuthPage {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.pageContent {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    width: 20%;
+}
