@@ -19,6 +19,12 @@ import LoginAsDoctor from "./pages/LoginAsDoctor/LoginAsDoctor";
 import DoctorProfile from "./pages/DoctorProfile/DoctorProfile";
 
 import ManagePrescriptions from "./pages/AdminPages/ManagePrescriptions/ManagePrescriptions";
+import ManageGrooming from './pages/AdminPages/ManageGrooming/ManageGrooming';
+import ManageReceipts from './pages/AdminPages/ManageReceipts/ManageReceipts';
+import CheckupSlots from './pages/AdminPages/CheckupSlots/CheckupSlots';
+import ManagePets from './pages/AdminPages/ManagePets/ManagePets';
+import ManageSoldAssets from './pages/AdminPages/ManageSoldAssets/ManageSoldAssets';
+import ManageSoldMedicines from './pages/AdminPages/ManageSoldMedicines/ManageSoldMedicines';
 
 import EmployeeService from './pages/EmployeeService/EmployeeService';
 
@@ -73,6 +79,12 @@ function App() {
           <Route path="manage-assets" element={< ManageAssets />} />
           <Route path="manage-medicines" element={< ManageMedicines />} />
           <Route path="manage-prescriptions" element={< ManagePrescriptions />} />
+          <Route path="manage-grooming" element={< ManageGrooming />} />
+          <Route path="food-receipts" element={< ManageReceipts />} />
+          <Route path="checkup-slots" element={< CheckupSlots />} />
+          <Route path="view-pets" element={< ManagePets />} />
+          <Route path="view-sold-assets" element={< ManageSoldAssets />} />
+          <Route path="view-sold-medicines" element={< ManageSoldMedicines />} />
 
           <Route path="sign-up-as-doctor" element={<SignUpAsDoctor  />} />
           <Route path="login-as-doctor" element={<LoginAsDoctor  />} />

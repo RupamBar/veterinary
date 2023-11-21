@@ -21,7 +21,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 // import Button from '@mui/material/Button';
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import "./ManagePrescriptions.css";
+import "./CheckupSlots.css";
 import defaultImage from "../../../resources/defaultView.png";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
@@ -37,15 +37,15 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-function ManagePrescriptions() {
+function CheckupSlots() {
   const location = useLocation();
   const navigate = useNavigate();
   const stateData = JSON.parse(location.state);
   const regex =
     /^(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).*(?=.*[A-Z]).*(?=.*[a-z]).*(?=.*[0-9]).{8}$/;
   const [open, setOpen] = useState(false);
-  const [doctorList, setDoctorList] = useState([]);
-  console.log(doctorList, "doctorList");
+  const [receiptsList, setReceiptsList] = useState([]);
+  // console.log(ReceiptsList, "ReceiptsList");
   const [err, setErr] = useState(false);
   const [newUser, setNewUser] = useState({
     name: null,
@@ -70,10 +70,10 @@ function ManagePrescriptions() {
     });
   };
 
-  const getAllPrescriptions = async () => {
+  const getAllSlots = async () => {
     try {
-      const res = await axios.get(`${config.backend_URL}/getAllPrescriptions`);
-      setDoctorList(res?.data?.data);
+      const res = await axios.get(`${config.backend_URL}/getAllSlots`);
+      setReceiptsList(res?.data?.data);
     } catch (err) {
       console.log("Error==", err.message);
       toast.error(err?.response?.data?.message, {
@@ -83,7 +83,7 @@ function ManagePrescriptions() {
   };
 
   useEffect(() => {
-    getAllPrescriptions();
+    getAllSlots();
   }, []);
 
   // ***for updating user
@@ -112,7 +112,7 @@ function ManagePrescriptions() {
       toast.success("Prescription is updated successfully", {
         theme: "colored",
       });
-      getAllPrescriptions();
+      getAllSlots();
     } catch (err) {
       console.log("Error==", err);
       toast.error(err?.response?.data?.message, {
@@ -138,7 +138,7 @@ function ManagePrescriptions() {
           theme: "colored",
         });
         handleClose();
-        getAllPrescriptions();
+        getAllSlots();
       } else {
         toast.error("This Prescription already exists", {
           theme: "colored",
@@ -166,7 +166,7 @@ function ManagePrescriptions() {
           `${config.backend_URL}/deleteMedicine/${data.id}`
         );
         // const response = await axios.delete(`${config.backend_URL}/removeAuthCustomer/${stateData.user.id}`);
-        getAllPrescriptions();
+        getAllSlots();
         toast.success("Medicine is deleted successfully", {
           theme: "colored",
         });
@@ -177,37 +177,37 @@ function ManagePrescriptions() {
   };
 
   const columns = [
+    // {
+    //   field: "Actions",
+    //   headerName: "Actions",
+    //   description: "This column has a value getter and is not sortable.",
+    //   sortable: false,
+    //   width: 160,
+    //   // valueGetter: (params) =>
+    //   //   `${params.row.name}`,
+    //   renderCell: (params) => {
+    //     // console.log(params, "params");
+    //     return (
+    //       <>
+    //         <Button
+    //           style={{
+    //             backgroundColor: "Tomato",
+    //             color: "white",
+    //             marginRight: "5px",
+    //           }}
+    //           onClick={(e) => {
+    //             // console.log(params.row, "row");
+    //             startViewPrescription(params.row);
+    //           }}
+    //         >
+    //           View
+    //         </Button>
+    //       </>
+    //     );
+    //   },
+    // },
     {
-      field: "Actions",
-      headerName: "Actions",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 160,
-      // valueGetter: (params) =>
-      //   `${params.row.name}`,
-      renderCell: (params) => {
-        // console.log(params, "params");
-        return (
-          <>
-            <Button
-              style={{
-                backgroundColor: "Tomato",
-                color: "white",
-                marginRight: "5px",
-              }}
-              onClick={(e) => {
-                // console.log(params.row, "row");
-                startViewPrescription(params.row);
-              }}
-            >
-              View
-            </Button>
-          </>
-        );
-      },
-    },
-    {
-      // field: "id",
+      field: "id",
       headerName: "ID",
       width: 100,
       renderCell: (params) => (
@@ -218,10 +218,10 @@ function ManagePrescriptions() {
               // Optionally provide user feedback (e.g., alert, toast) for successful copy
               alert(`Copied ID: ${params?.row?.id}`);
             }}
-            style={{justifyContent:'left' }}
+            style={{ justifyContent: "left" }}
           >
-            <ContentCopyIcon/>
-            <small>copy</small>
+            <ContentCopyIcon />
+            <small>Copy</small>
           </Button>
         </>
       ),
@@ -245,40 +245,66 @@ function ManagePrescriptions() {
       },
     },
     {
-      field: "doctors",
-      headerName: "Doctor Name",
-      width: 150,
-      renderCell: (params) => {
-        // console.log(params, "params");
-        return params?.row?.doctors?.name;
-      },
-    },
-    {
-      field: "slots",
-      headerName: "Slot",
+      field: "customersEmail",
+      headerName: "Email",
       width: 250,
       renderCell: (params) => {
         // console.log(params, "params");
+        return params?.row?.customers?.email;
+      },
+    },
+    {
+      field: "created_at",
+      headerName: "Slot Timing",
+      width: 300,
+      renderCell: (params) => {
+        // console.log(params, "params");
         return `${new Date(
-          params?.row?.slots?.dateTime
+          params?.row?.dateTime
         ).toLocaleDateString()} ${new Date(
-          params?.row?.slots?.dateTime
+          params?.row?.dateTime
         ).toLocaleTimeString()}`;
       },
     },
     {
-      field: "cnsltNote",
-      headerName: "Consult Note",
-      width: 150,
+      field: "employees",
+      headerName: "Employee Name",
+      width: 200,
+      renderCell: (params) => {
+        // console.log(params, "params");
+        return params?.row?.employees?.name || 'N/A';
+      },
     },
     {
-      field: "investigation",
-      headerName: "Investigation",
-      width: 150,
+      field: "doctors",
+      headerName: "Doctor Name",
+      width: 200,
+      renderCell: (params) => {
+        // console.log(params, "params");
+        return params?.row?.doctors?.name || 'N/A';
+      },
     },
     {
-      field: "prscMed",
-      headerName: "Prescribed Medicine",
+      field: "checkUpType",
+      headerName: "Slot Type",
+      width: 200,
+    },
+    // {
+    //   field: "slots",
+    //   headerName: "Slot",
+    //   width: 200,
+    //   renderCell: (params) => {
+    //     // console.log(params, "params");
+    //     return `${new Date(
+    //       params?.row?.slots?.dateTime
+    //     ).toLocaleDateString()} ${new Date(
+    //       params?.row?.slots?.dateTime
+    //     ).toLocaleTimeString()}`;
+    //   },
+    // },
+    {
+      field: "checkedUp",
+      headerName: "Checked Up",
       width: 150,
     },
   ];
@@ -302,7 +328,7 @@ function ManagePrescriptions() {
               }}
             />
           </div>
-          <div className="adminPageHeading">Prescriptions</div>
+          <div className="adminPageHeading">Checkup Slots</div>
         </div>
         {/* <div className="addBtnContainer">
           <Button
@@ -319,7 +345,7 @@ function ManagePrescriptions() {
         <div className="tableContainer">
           <Box sx={{ height: 450, width: "100%" }}>
             <DataGrid
-              rows={doctorList}
+              rows={receiptsList || []}
               columns={columns}
               initialState={{
                 pagination: {
@@ -332,10 +358,7 @@ function ManagePrescriptions() {
               // checkboxSelection
               disableRowSelectionOnClick
               slots={{ toolbar: GridToolbar }}
-              // experimentalFeatures={{ clipboardPaste: true }}
-              // disableClipboardPaste
               getRowId={(row) => row.id}
-              disableSelectionOnClick
             />
           </Box>
         </div>
@@ -494,4 +517,4 @@ function ManagePrescriptions() {
   );
 }
 
-export default ManagePrescriptions;
+export default CheckupSlots;

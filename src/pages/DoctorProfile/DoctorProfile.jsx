@@ -75,7 +75,7 @@ function DoctorProfile() {
         customerName: item.customers.name,
         customerEmail: item.customers.email,
         customerPhone: item.customers.phone,
-        petId: item.pets.petId,
+        petId: item.pets.id,
         petName: item.pets.animals.name,
         picURL: item.pets.animals.picURL,
         doctorId: item.doctors.id,
@@ -133,7 +133,7 @@ function DoctorProfile() {
         ).toLocaleDateString()} ${new Date(
           item.slots.dateTime
         ).toLocaleTimeString()}`,
-        petId: item.pets.petId,
+        petId: item.pets.id,
         petName: item.pets.animals.name,
         customerId: item.customers.id,
         customerName: item.customers.name,
@@ -166,7 +166,7 @@ function DoctorProfile() {
         ).toLocaleDateString()} ${new Date(
           item.slots.dateTime
         ).toLocaleTimeString()}`,
-        petId: item.pets.petId,
+        petId: item.pets.id,
         petName: item.pets.animals.name,
         customerId: item.customers.id,
         customerName: item.customers.name,

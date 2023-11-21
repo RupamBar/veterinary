@@ -10,6 +10,7 @@ import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import { toast } from "react-toastify";
 import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
 
 function BookSlots() {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ function BookSlots() {
       let arr = [];
       res?.data?.data.forEach((item, i) => {
         let data = {
-          petId: item?.petId,
+          petId: item?.id,
           animalId: item?.animals?.id,
           animalName: item?.animals?.name,
         };
@@ -219,6 +220,7 @@ function BookSlots() {
                 }
                 else
                 {
+                  console.log(payloadData, "payloadData11");
                     toast.error('Please fill all the fields', {
                         theme : 'colored'
                     });
@@ -251,6 +253,9 @@ function BookSlots() {
         </div>
       </div>
       }
+      <div style={{marginTop:'20px'}}>
+        <Footer />
+      </div>
     </>
   );
 }

@@ -22,6 +22,7 @@ import config from "../../config.json";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import Badge from "@mui/material/Badge";
 import { toast } from "react-toastify";
+import Footer from "../../components/Footer/Footer";
 
 function AddToCart() {
   const navigate = useNavigate();
@@ -38,19 +39,20 @@ function AddToCart() {
 
   const [err, setErr] = useState(false);
 
-  //   console.log(addedToCart, "addedToCart");
-  //   console.log(addedProductIds, "addedProductIds");
+    // console.log(addedToCart, "addedToCart");
+    // console.log(addedProductIds, "addedProductIds");
 
-  //     console.log(addedFoods, "addedFoods");
-  //   console.log(addedAnimals, "addedAnimals");
-  //   console.log(addedMedicines, "addedMedicines");
-  //   console.log(addedAssets, "addedAssets");
+      // console.log(addedFoods, "addedFoods");
+    // console.log(addedAnimals, "addedAnimals");
+    // console.log(addedMedicines, "addedMedicines");
+    // console.log(addedAssets, "addedAssets");
 
   const getTokenData = () => {
     try {
       const tokenData = JSON.parse(localStorage.getItem("token"));
       if (tokenData) {
         setUser(tokenData);
+        getCartProducts();
       }
     } catch (err) {
       console.log("Error==", err.message);
@@ -60,7 +62,7 @@ function AddToCart() {
   const getCartProducts = async () => {
     const cartToken = JSON.parse(localStorage.getItem("cart"));
     // console.log(cartToken, "cartToken");
-    cartToken?.forEach(async (item, i) => {
+    cartToken?.forEach(async(item, i) => {
       try {
         if (item?.id === user?.id) {
           setAddedToCart(item?.products || []);
@@ -79,6 +81,7 @@ function AddToCart() {
               foodIdArr.push(item.id);
             }
           });
+          console.log(foodIdArr, "foddIdArr");
           const res1 = await axios.post(
             `${config.backend_URL}/getFoodsByIDs`,
             foodIdArr
@@ -88,6 +91,7 @@ function AddToCart() {
             item.quantity = 1;
             item.left = item.count ? item.count - item.quantity : item.count;
           });
+          console.log(res1.data.data, "res1.data.data");
           setAddedFoods(res1.data.data || []);
 
           // collecting ID of animal only
@@ -97,6 +101,7 @@ function AddToCart() {
               animalIdArr.push(item.id);
             }
           });
+          console.log(animalIdArr, "animalIdArr");
           const res2 = await axios.post(
             `${config.backend_URL}/getAnimalsByIDs`,
             animalIdArr
@@ -106,6 +111,7 @@ function AddToCart() {
             item.quantity = 1;
             item.left = item.count ? item.count - item.quantity : item.count;
           });
+          console.log(res2.data.data, "res2.data.data");
           setAddedAnimals(res2.data.data || []);
 
           // collecting ID of medicine only
@@ -115,6 +121,7 @@ function AddToCart() {
               medicineIdArr.push(item.id);
             }
           });
+          console.log(medicineIdArr, "medicineIdArr");
           const res3 = await axios.post(
             `${config.backend_URL}/getMedicinesByIDs`,
             medicineIdArr
@@ -124,6 +131,7 @@ function AddToCart() {
             item.quantity = 1;
             item.left = item.count ? item.count - item.quantity : item.count;
           });
+          console.log(res3.data.data, "res3.data.data");
           setAddedMedicines(res3.data.data || []);
 
           // collecting ID of asset only
@@ -133,15 +141,17 @@ function AddToCart() {
               assetIdArr.push(item.id);
             }
           });
+          console.log(assetIdArr, "assetIdArr");
           const res4 = await axios.post(
             `${config.backend_URL}/getAssetsByIDs`,
-            medicineIdArr
+            assetIdArr
           );
           res4.data.data.forEach((item, i) => {
             item.type = "asset";
             item.quantity = 1;
             item.left = item.count ? item.count - item.quantity : item.count;
           });
+          console.log(res4.data.data, "res4.data.data");
           setAddedAssets(res4.data.data || []);
           return;
         }
@@ -157,6 +167,7 @@ function AddToCart() {
 
   useEffect(() => {
     getCartProducts();
+    calculateTotalAmount();
   }, [user]);
 
   const decreaseQuantity = (str, item, i) => {
@@ -302,6 +313,8 @@ function AddToCart() {
         receiptsData.push({
           customerId: user.id,
           animalId: item.id,
+          quantity: item.quantity,
+          amountPaid: item.price * item.quantity,
         });
         const res = await axios.post(
           `${config.backend_URL}/buyProducts/animals`,
@@ -310,6 +323,8 @@ function AddToCart() {
         const resp = await axios.post(`${config.backend_URL}/addPets`, {
           customerId: user.id,
           animalId: item.id,
+          quantity: item.quantity,
+          amountPaid: item.price * item.quantity,
         });
       });
       receiptsData = [];
@@ -318,6 +333,8 @@ function AddToCart() {
         receiptsData.push({
           customerId: user.id,
           medicineId: item.id,
+          quantity: item.quantity,
+          amountPaid: item.price * item.quantity,
         });
         const res = await axios.post(
           `${config.backend_URL}/buyProducts/medicines`,
@@ -328,6 +345,8 @@ function AddToCart() {
           {
             customerId: user.id,
             medicineId: item.id,
+            quantity: item.quantity,
+            amountPaid: item.price * item.quantity,
           }
         );
       });
@@ -337,6 +356,8 @@ function AddToCart() {
         receiptsData.push({
           customerId: user.id,
           assetId: item.id,
+          quantity: item.quantity,
+          amountPaid: item.price * item.quantity,
         });
         const res = await axios.post(
           `${config.backend_URL}/buyProducts/assets`,
@@ -345,6 +366,8 @@ function AddToCart() {
         const resp = await axios.post(`${config.backend_URL}/addSoldAssets`, {
           customerId: user.id,
           assetId: item.id,
+          quantity: item.quantity,
+          amountPaid: item.price * item.quantity,
         });
       });
       // console.log(receiptsData.length, "receiptsData????");
@@ -384,7 +407,7 @@ function AddToCart() {
         </div>
         {/* Cart products list */}
         <div className="cartMainDiv">
-          {totalAmount ? (
+          {addedToCart.length !== 0 ? (
             <div className="productsContainer">
               {/* product details */}
               {/* Foods */}
@@ -737,7 +760,7 @@ function AddToCart() {
             </table>
             <div className="buyBtn">
               {
-                totalAmount ? 
+                addedToCart.length !== 0 ? 
                 <Button
                 style={{
                   backgroundColor: "#ff1548",
@@ -797,6 +820,7 @@ function AddToCart() {
           </Badge>
         </Box>
       ) : null}
+      <Footer/>
     </div>
   );
 }

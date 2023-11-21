@@ -169,7 +169,7 @@ function EmployeeService() {
           });
           let payload = {
             empId : userData.id,
-            petId : selectedPendingSlot.pets.petId,
+            petId : selectedPendingSlot.pets.id,
             customerId : selectedPendingSlot.customers.id,
             slotId : selectedPendingSlot.id,
             totalAmount : totalPrice,
@@ -248,14 +248,55 @@ function EmployeeService() {
         width: 100,
     },
     {
-        field : "productsUsedFormatted",
-        headerName: "Product Used",
-        width: 300,
-        // renderCell: (params) => {
-        //     // console.log(JSON.parse(params?.row?.productsUsed), "params");
-            
-        //     return "Data";
-        // },
+      field: "productsUsed",
+      headerName: "Products Ids",
+      width: 500,
+      renderCell: (params) => {
+        // console.log(params, "params");
+        let str = "";
+        let newStr = "";
+        JSON.parse(params?.row?.productsUsed).forEach((item, i) => {
+          // str += ` ${item?.assetId},`;
+          str += item?.assetId + ", \n"
+        });
+        // console.log(str, "str");
+        // return str;
+        return (
+          <TextField 
+            style={{width:'100%', height:'90px'}}
+            value={str}
+            InputProps={{ disableUnderline: true }}
+            multiline
+            aria-readonly
+          />
+        )
+      },
+      // editable: true,
+    },
+    {
+      field: "",
+      headerName: "Quantities",
+      width: 500,
+      renderCell: (params) => {
+        // console.log(params, "params");
+        let str = "";
+        JSON.parse(params?.row?.productsUsed).forEach((item, i) => {
+          // str += ` ${item?.assetId},`;
+          str += item?.count + ", \n"
+        });
+        // console.log(str, "str");
+        // return str;
+        return (
+          <TextField 
+            style={{width:'100%', height:'90px'}}
+            value={str}
+            InputProps={{ disableUnderline: true }}
+            multiline
+            aria-readonly
+          />
+        )
+      },
+      // editable: true,
     },
     {
       field: "checkedUp",
@@ -314,6 +355,9 @@ function EmployeeService() {
                   // checkboxSelection
                   disableRowSelectionOnClick
                   slots={{ toolbar: GridToolbar }}
+                  getRowHeight={() => {
+                    return 100;
+                  }}
                 />
               ) : (
                 <div className="formContainer">
@@ -423,6 +467,17 @@ function EmployeeService() {
                                   let arr = [...selectedProductsArr];
                                   arr.splice(i, 1);
                                   setSelectedProductsArr([...arr]);
+                                  //counting amount
+                                  var total = 0;
+                                  var tCount = 0;
+                                  arr.forEach((item, i) => {
+                                    total +=
+                                      item?.product?.price * item?.quantity;
+                                  
+                                      tCount += parseInt(item?.quantity);
+                                  });
+                                  setTotalPrice(total);
+                                  setTotalCount(tCount);
                                 }}
                               />
                             )}

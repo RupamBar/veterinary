@@ -21,6 +21,7 @@ import axios from "axios";
 import config from "../../config.json";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import Badge from "@mui/material/Badge";
+import Footer from "../../components/Footer/Footer";
 
 function AnimalFoods() {
   const navigate = useNavigate();
@@ -307,6 +308,7 @@ function AnimalFoods() {
         </Fab>
         </Badge>
       </Box> : null}
+      <Footer/>
     </div>
   );
 }

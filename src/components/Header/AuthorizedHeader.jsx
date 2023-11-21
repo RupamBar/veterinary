@@ -83,7 +83,7 @@ function AuthorizedHeader({ user }) {
   useEffect(() => {
     setUserData(user);
     getUserData();
-  });
+  }, []);
 
   const handleLogout = async () => {
     // try

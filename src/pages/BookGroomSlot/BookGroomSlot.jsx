@@ -10,6 +10,7 @@ import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import { toast } from "react-toastify";
 import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
 
 function BookGroomSlot() {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ function BookGroomSlot() {
       let arr = [];
       res?.data?.data.forEach((item, i) => {
         let data = {
-          petId: item?.petId,
+          petId: item?.id,
           animalId: item?.animals?.id,
           animalName: item?.animals?.name,
         };
@@ -250,6 +251,9 @@ function BookGroomSlot() {
         </div>
       </div>
       }
+      <div style={{marginTop:'20px'}}>
+        <Footer />
+      </div>
     </>
   );
 }
